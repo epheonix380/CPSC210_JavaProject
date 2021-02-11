@@ -1,19 +1,21 @@
 package model;
 
-import java.sql.Time;
+import model.stock.Stock;
+import model.stock.InventoryStock;
+
 import java.util.Date;
 
 public class Record implements interfaces.Record {
 
     final Date date;
 
-    final Stock stock;
+    final InventoryStock item;
     final Boolean isSuccess;
 
-    public Record(Boolean isSuccess, Date date, Stock stock) {
+    public Record(Boolean isSuccess, Date date, InventoryStock item) {
         this.isSuccess = isSuccess;
         this.date = isSuccess ? date : null;
-        this.stock = isSuccess ? stock : null;
+        this.item = isSuccess ? item : null;
 
     }
 
@@ -23,17 +25,17 @@ public class Record implements interfaces.Record {
     }
 
     @Override
-    public Stock getStock() {
-        return this.stock;
+    public Stock getItem() {
+        return this.item;
     }
 
     @Override
-    public String getStockName() {
-        return this.stock.getName();
+    public String getItemName() {
+        return this.item.getName();
     }
 
     @Override
     public int getValue() {
-        return this.stock.getValue();
+        return this.item.getValue();
     }
 }

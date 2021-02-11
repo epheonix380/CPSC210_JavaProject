@@ -1,17 +1,16 @@
 package interfaces;
 
-import model.Stock;
+import model.stock.Stock;
 
-import java.sql.Time;
 import java.util.Date;
 
 public interface Record {
 
     public Date getDate();
 
-    public Stock getStock();
+    public Stock getItem();
 
-    public String getStockName();
+    public String getItemName();
 
     public int getValue();
 
