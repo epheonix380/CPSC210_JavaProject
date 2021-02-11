@@ -1,5 +1,6 @@
 package model.shop;
 
+import errors.NotEnoughInventoryError;
 import model.Receipt;
 import model.Record;
 import model.stock.NIStock;
@@ -8,6 +9,7 @@ import model.stock.InventoryStock;
 import java.util.HashMap;
 import java.util.Map;
 
+//Represents InventoryShop, tracks the inventory going in and out of the shop
 public class InventoryShop extends Shop {
 
     private Map<String, InventoryStock> inventoryMap = new HashMap<>();
@@ -44,19 +46,30 @@ public class InventoryShop extends Shop {
     }
 
 
-
     @Override
     public Receipt makePurchase() {
         int total = 0;
+        Map<String, InventoryStock> soldItems = new HashMap<>();
+
         for (Map.Entry<String,InventoryStock> entry : this.cart.entrySet()) {
             InventoryStock stock = entry.getValue();
-            total += stock.getValue();
             String name = stock.getName();
-            int quantity = -1 * stock.getQuantity();
-            Record sale = inventoryMap.get(name).sell(quantity);
-            this.records.add(sale);
+            int quantity = stock.getQuantity();
+            InventoryStock requestedStock = inventoryMap.get(name);
+
+            Record sale = requestedStock.sell(quantity);
+            if (sale.getSuccess()) {
+                this.records.add(sale);
+                total += stock.getValue();
+                soldItems.put(entry.getKey(),entry.getValue());
+            } else {
+                this.records.add(sale);
+                NotEnoughInventoryError error = new NotEnoughInventoryError(stock, requestedStock);
+                throw error;
+            }
+
         }
-        Receipt receipt = new Receipt(total,this.cart);
+        Receipt receipt = new Receipt(total,soldItems);
         return receipt;
     }
 }

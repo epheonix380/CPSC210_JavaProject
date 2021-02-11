@@ -4,6 +4,7 @@ import model.Record;
 
 import java.util.Date;
 
+// Represents an InventoryStock, which track the inventory said stock in the store
 public class InventoryStock extends Stock {
 
     private int quantity;

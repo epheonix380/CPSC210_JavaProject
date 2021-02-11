@@ -7,6 +7,7 @@ import model.stock.NIStock;
 
 import java.util.*;
 
+// Represents a shop, with a Catalogue of items sold, a cart of the current transaction, and records of previous sales
 public abstract class Shop {
 
     protected Map<String, NIStock> catalogue;

@@ -4,6 +4,7 @@ import model.Record;
 
 import java.util.Date;
 
+// Represents a NonInventoryStock, which does not track the amount of said Stock the store has
 public class NIStock extends Stock {
 
     public NIStock(String name, int price, int unitCost) {

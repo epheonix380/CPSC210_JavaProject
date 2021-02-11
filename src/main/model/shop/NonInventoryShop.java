@@ -7,6 +7,7 @@ import model.stock.NIStock;
 
 import java.util.Map;
 
+//Represents NonInventoryShop, which does not track the inventory of the shop
 public class NonInventoryShop extends Shop {
 
     @Override

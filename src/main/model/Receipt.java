@@ -5,11 +5,18 @@ import model.stock.InventoryStock;
 import java.util.List;
 import java.util.Map;
 
+// Represents all the items purchased in a purchase, having a Map of items that were sold and the total
 public class Receipt {
 
     final int total;
     final Map<String,InventoryStock> items;
 
+    /*
+     * REQUIRES: total > 0
+     * MODIFIES: this
+     * EFFECTS: total is the sum of all the values in the items map;
+     * 			the items map is a map of all the items with the String being the item names
+     */
     public Receipt(int total, Map<String,InventoryStock> items) {
         this.total = total;
         this.items = items;
