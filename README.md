@@ -18,9 +18,13 @@
 - I noticed that a lot of people here were not using digital systems for item sales and instead still used calculators
 and handwritten receipts. So I thought of making a free POS system that was optimized for this market.
 
-**Wish List**
--I wish to be able to setup a shop
--I wish to be able to add items with names and prices to it
--I wish to be able to choose whether to have an inventory system
--I wish to be able to sell items
--I wish to be able to keep track of my sales
+**User Story**
+-As a user I wish to be able to create a shop
+-As a user I wish to be able to add items with names and prices to my shop
+-As a user I wish to be able to choose whether to have an inventory system
+-As a user I wish to be able to add items in the inventory system
+-As a user I wish to be able to add items to a cart
+-As a user I wish to be limited by my inventory system so that I don't sell more items than I actually have
+-As a user I wish to be able to make a sale with all the items in the cart
+-As a user I wish to be able to keep track of my sales
+
