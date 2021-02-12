@@ -87,6 +87,7 @@ public class PointOfServiceApp {
             System.out.println("\tgi -> Get Inventory");
             System.out.println("\tai -> Add Inventory");
         }
+        System.out.println("\tr -> Show Records");
         System.out.println("\tq -> quit");
     }
 
@@ -104,8 +105,27 @@ public class PointOfServiceApp {
             getInventory();
         } else if (command.equals("ai") && isInventory) {
             modifyInventory();
+        } else if (command.equals("r")) {
+            getRecords();
         } else {
             System.out.println("Selection not valid...");
+        }
+    }
+
+    // EFFECTS: Gets and prints records
+    private void getRecords() {
+        List<Receipt> records = shop.getRecords();
+        System.out.println("\nRECORDS:");
+        for (Receipt receipt : records) {
+            System.out.println("\tDate and Time: " + receipt.getDateTime());
+            System.out.println("\t\tTotal: " + receipt.getTotal());
+            for (Map.Entry<String, InventoryStock> entry : receipt.getItems().entrySet()) {
+                InventoryStock stock = entry.getValue();
+                System.out.println("\t\tItem: " + stock.getName());
+                System.out.println("\t\t\t Price: " + stock.getPrice());
+                System.out.println("\t\t\t Quantity: " + stock.getQuantity());
+                System.out.println("\t\t\t Subtotal: " + stock.getValue());
+            }
         }
     }
 
@@ -204,7 +224,7 @@ public class PointOfServiceApp {
 
     // EFFECTS: Executes the functions related to the commands
     private void processPurchaseCommand(String command) {
-        if (command.equals("m")) {
+        if (command.equals("p")) {
             makePurchase();
         } else if (command.equals("a")) {
             addToCart();
