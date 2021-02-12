@@ -1,6 +1,5 @@
 package model.stock;
 
-import model.Record;
 
 import java.util.Date;
 
@@ -11,12 +10,9 @@ public class NIStock extends Stock {
         super(name, price, unitCost);
     }
 
+    // EFFECTS: Returns true if this stock can be sold, this method has no effect in NIStock
     @Override
-    public Record sell(int quantity) {
-        Record itemSale;
-        Date date = new Date();
-        InventoryStock stock = new InventoryStock(this.name, quantity, this.price, this.unitCost);
-        itemSale = new Record(true, date, stock);
-        return itemSale;
+    public boolean sell(int quantity) {
+        return true;
     }
 }

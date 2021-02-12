@@ -79,12 +79,13 @@ public class PointOfServiceApp {
     // EFFECTS: Prints the normal menu
     private void displayMenu() {
         System.out.println("\nSelect from:");
-        System.out.println("\tgC -> Get the Catalogue");
-        System.out.println("\taC -> Add to the Catalogue");
-        System.out.println("\trC -> Remove Item From the Catalogue");
+        System.out.println("\tgc -> Get the Catalogue");
+        System.out.println("\tac -> Add to the Catalogue");
+        System.out.println("\trc -> Remove Item From the Catalogue");
         System.out.println("\tp -> Purchase item(s)");
         if (isInventory) {
-            System.out.println("\tmI -> Modify Inventory");
+            System.out.println("\tgi -> Get Inventory");
+            System.out.println("\tai -> Add Inventory");
         }
         System.out.println("\tq -> quit");
     }
@@ -99,10 +100,26 @@ public class PointOfServiceApp {
             removeItemFromCatalogue();
         } else if (command.equals("p")) {
             purchase();
-        } else if (command.equals("mi") && isInventory) {
+        } else if (command.equals("gi") && isInventory) {
+            getInventory();
+        } else if (command.equals("ai") && isInventory) {
             modifyInventory();
         } else {
             System.out.println("Selection not valid...");
+        }
+    }
+
+    // REQUIRES: isInventory is true
+    // EFFECTS: Gets and prints the inventory
+    private void getInventory() {
+        Map<String, InventoryStock> inventory = shop.getInventoryMap();
+        for (Map.Entry<String,InventoryStock> entry : inventory.entrySet()) {
+            InventoryStock stock = entry.getValue();
+            System.out.println("Item: " + stock.getName());
+            System.out.println("\t Price: " + stock.getPrice());
+            System.out.println("\t Unit Cost: " + stock.getUnitCost());
+            System.out.println("\t Quantity: " + stock.getQuantity());
+            System.out.println("\t Customer Value: " + stock.getValue());
         }
     }
 
@@ -161,34 +178,39 @@ public class PointOfServiceApp {
     // EFFECTS: Prints the cart with all the items in it
     private void getCart() {
         Map<String, InventoryStock> cart = shop.getCart();
-        System.out.println("CART:");
-        for (Map.Entry<String,InventoryStock> entry : cart.entrySet()) {
-            InventoryStock stock = entry.getValue();
-            System.out.println("\t Item: " + stock.getName());
-            System.out.println("\t\t Price: " + stock.getPrice());
-            System.out.println("\t\t Quantity: " + stock.getQuantity());
-            System.out.println("\t\t Subtotal: " + stock.getValue());
+        System.out.println("\nCART:");
+        System.out.println("Total:" + shop.getCartTotal());
+        if (shop.getCart().isEmpty()) {
+            System.out.println("The Cart is Empty");
+        } else {
+            for (Map.Entry<String, InventoryStock> entry : cart.entrySet()) {
+                InventoryStock stock = entry.getValue();
+                System.out.println("\t Item: " + stock.getName());
+                System.out.println("\t\t Price: " + stock.getPrice());
+                System.out.println("\t\t Quantity: " + stock.getQuantity());
+                System.out.println("\t\t Subtotal: " + stock.getValue());
+            }
         }
     }
 
     // EFFECTS: Shows options in the Purchase submenu
     private void showOptions() {
         System.out.println("\nSelect from:");
-        System.out.println("\tmp -> Make Purchase");
-        System.out.println("\tac -> Add to the Cart");
-        System.out.println("\trc -> Remove Item From the Cart");
-        System.out.println("\tdc -> Exit and destroy cart");
+        System.out.println("\tp -> Make Purchase");
+        System.out.println("\ta -> Add to the Cart");
+        System.out.println("\tr -> Remove Item From the Cart");
+        System.out.println("\td -> Exit and destroy cart");
     }
 
     // EFFECTS: Executes the functions related to the commands
     private void processPurchaseCommand(String command) {
-        if (command.equals("mp")) {
+        if (command.equals("m")) {
             makePurchase();
-        } else if (command.equals("ac")) {
+        } else if (command.equals("a")) {
             addToCart();
-        } else if (command.equals("rc")) {
+        } else if (command.equals("r")) {
             removeFromCart();
-        } else if (command.equals("dc")) {
+        } else if (command.equals("d")) {
             destroyCart();
         } else {
             System.out.println("Selection not valid...");
@@ -198,7 +220,7 @@ public class PointOfServiceApp {
     // EFFECTS: Destroys the cart and exits the purchase submenu
     private void destroyCart() {
         shop.destroyCart();
-        System.out.println("Cart Destroyed");
+        System.out.println("\nCart Destroyed");
         active = false;
     }
 
@@ -224,6 +246,8 @@ public class PointOfServiceApp {
             System.out.println("Added " + quantity + " of " + name + " to cart");
         } catch (NullPointerException e) {
             itemNotFound(name);
+        } catch (NotEnoughInventoryError e) {
+            System.out.println(e.errorMessage());
         }
     }
 
@@ -232,6 +256,7 @@ public class PointOfServiceApp {
     private void makePurchase() {
         try {
             Receipt receipt = shop.makePurchase();
+            System.out.println("\n Success!");
             System.out.println("Total: " + receipt.getTotal());
             Map<String,InventoryStock> items = receipt.getItems();
             for (Map.Entry<String,InventoryStock> entry : items.entrySet()) {
@@ -241,6 +266,7 @@ public class PointOfServiceApp {
                 System.out.println("\t\t Quantity: " + stock.getQuantity());
                 System.out.println("\t\t Subtotal: " + stock.getValue());
             }
+            destroyCart();
             active = false;
         } catch (NotEnoughInventoryError error) {
             System.out.println(error.errorMessage());
@@ -270,13 +296,13 @@ public class PointOfServiceApp {
         int userInput = 0;
         boolean wentToCatch = false;
         do {
-            System.out.println(question);
+            System.out.println("\n" + question);
             if (input.hasNextInt()) {
                 userInput = input.nextInt();
                 wentToCatch = true;
             } else {
                 input.nextLine();
-                System.out.println("Please Enter a valid integer");
+                System.out.println("\n Please Enter a valid integer");
                 input.nextLine();
             }
         } while (!wentToCatch);
@@ -288,13 +314,13 @@ public class PointOfServiceApp {
         String userInput = null;
         boolean wentToCatch = false;
         do {
-            System.out.println(question);
+            System.out.println("\n" + question);
             if (input.hasNext()) {
                 userInput = input.next();
                 wentToCatch = true;
             } else {
                 input.nextLine();
-                System.out.println("Please Enter a valid String");
+                System.out.println("\n Please Enter a valid String");
                 input.nextLine();
             }
         } while (!wentToCatch);

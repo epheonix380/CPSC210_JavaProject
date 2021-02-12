@@ -1,6 +1,5 @@
 package model.stock;
 
-import model.Record;
 
 // Represents an Item in the shop with a name, the cost to purchase the item (in cents), and the price at which it is
 // sold to the customer (in cents)
@@ -37,15 +36,18 @@ public abstract class Stock {
         return this.name;
     }
 
+    // EFFECTS: Returns true if this stock can be sold, false otherwise
+    public abstract boolean sell(int quantity);
 
-    public abstract Record sell(int quantity);
-
+    // MODIFIES: This
+    // EFFECTS: Sets the unitCost of the item
     public void setUnitCost(int unitCost) {
         this.unitCost = unitCost;
 
     }
 
-
+    // MODIFIES: This
+    // EFFECTS: Sets the price of the item
     public void setPrice(int price) {
         this.price = price;
 

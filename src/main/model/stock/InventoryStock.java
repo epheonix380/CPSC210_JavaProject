@@ -1,6 +1,5 @@
 package model.stock;
 
-import model.Record;
 
 import java.util.Date;
 
@@ -9,6 +8,12 @@ public class InventoryStock extends Stock {
 
     private int quantity;
 
+    // REQUIRES: quantity >= 0, price > 0, unitCost > 0
+    // MODIFIES: This
+    // EFFECTS: name is the Name of the item
+    //          quantity is how much of the item is in inventory
+    //          price is how much the item will be sold for to the customer
+    //          unitCost is how much the item was bought for
     public InventoryStock(String name, int quantity, int price, int unitCost) {
         super(name, price, unitCost);
         this.quantity = quantity;
@@ -23,23 +28,32 @@ public class InventoryStock extends Stock {
         return this.quantity;
     }
 
+    // MODIFIES: This
+    // EFFECTS: Modifies the quantity of the item
     public void modifyInventory(int quantity) {
         this.quantity += quantity;
     }
 
-    public Record sell(int quantity) {
-        Record itemSale;
+    // EFFECTS: returns true if item can be sold
+    public boolean isSellable(int quantity) {
+        return quantity <= this.quantity;
+    }
+
+    // MODIFIES: This
+    // EFFECTS: If item can be sold, subtracts amount sold from quantity and returns true
+    //          if it can't be sold returns false
+    public boolean sell(int quantity) {
+        boolean isSuccess;
         if (quantity <= this.quantity) {
             Date date = new Date();
             InventoryStock stock = new InventoryStock(this.name, quantity, this.price, this.unitCost);
-            itemSale = new Record(true, date, stock);
             this.quantity -= quantity;
+            isSuccess = true;
 
         } else {
-            itemSale = new Record(false, null,null);
-
+            isSuccess = false;
         }
-        return itemSale;
+        return isSuccess;
 
     }
 }
