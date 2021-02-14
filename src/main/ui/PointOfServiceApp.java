@@ -81,6 +81,7 @@ public class PointOfServiceApp {
         System.out.println("\nSelect from:");
         System.out.println("\tgc -> Get the Catalogue");
         System.out.println("\tac -> Add to the Catalogue");
+        System.out.println("\tec -> Edit the Catalogue");
         System.out.println("\trc -> Remove Item From the Catalogue");
         System.out.println("\tp -> Purchase item(s)");
         if (isInventory) {
@@ -97,6 +98,8 @@ public class PointOfServiceApp {
             getCatalogue();
         } else if (command.equals("ac")) {
             addToCatalogue();
+        } else if (command.equals("ec")) {
+            editCatalogue();
         } else if (command.equals("rc")) {
             removeItemFromCatalogue();
         } else if (command.equals("p")) {
@@ -109,6 +112,17 @@ public class PointOfServiceApp {
             getRecords();
         } else {
             System.out.println("Selection not valid...");
+        }
+    }
+
+    private void editCatalogue() {
+        String name = validateString("Name of Catalogue Item you wish to edit");
+        int price = validateInt("New Price of item, if you wish to keep the original price, please put 0");
+        int unitCost = validateInt("New Cost of item, if you wish to keep the original cost, please put 0");
+        try {
+            shop.editCatalogue(name,price,unitCost);
+        } catch (NullPointerException e) {
+            itemNotFound(name);
         }
     }
 

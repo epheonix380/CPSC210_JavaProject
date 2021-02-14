@@ -28,3 +28,10 @@ and handwritten receipts. So I thought of making a free POS system that was opti
 -As a user I wish to be able to make a sale with all the items in the cart
 -As a user I wish to be able to keep track of my sales
 
+**HOW TO USE**
+Since this is designed to be a POS system that is used by sales persons, one has to add a catalogue of items
+first before being able to purchase items. The system gets the price of the items from this catalogue and thus
+creating the items in the catalogue is the first thing that should be done. Additionally, if the user has chosen
+the inventory shop, that means that the program will be keeping track of the inventory of the shop and thus after
+creating the catalogue, the inventory needs to be added in order to be able to purchase items.
+
