@@ -10,9 +10,17 @@
 - Have the ability to "sell" the items
 - Have transaction records
 
+The main use of this application will be for independent vendors who cannot afford
+solutions from the large companies. Because of this, it will have a feature set to
+match its user base. It won't be connected to the internet because it is not necessary,
+ it won't have multi user support because it won't be necessary. It will be for one person
+running a small store, that wants to keep track of their sales and make it easier for
+them to run their business.
+
 **Who will use it?**
 - Small shops
 - Street Vendors (Probably would require further development into an android app)
+- Basically any place that only has a single user and wants to keep track of sales
 
 **Why is this project of interest to you**
 - I noticed that a lot of people here were not using digital systems for item sales and instead still used calculators
