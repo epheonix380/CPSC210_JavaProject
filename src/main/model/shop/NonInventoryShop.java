@@ -18,7 +18,7 @@ public class NonInventoryShop extends Shop {
         for (Map.Entry<String,InventoryStock> entry : this.cart.entrySet()) {
             InventoryStock stock = entry.getValue();
             total += stock.getValue();
-            this.catalogue.get(stock.getName()).sell(stock.getQuantity());
+            this.catalogue.get(stock.getName().toLowerCase()).sell(stock.getQuantity());
         }
         Receipt receipt = new Receipt(total,this.cart);
         this.cart = new HashMap<>();
@@ -26,16 +26,4 @@ public class NonInventoryShop extends Shop {
         return receipt;
     }
 
-    // EFFECTS: This method has no effect in NonInventoryShop
-    @Override
-    public void addInventory(NIStock stock, int quantity) {
-
-    }
-
-    // EFFECTS: This method has not effect in this class
-    //          and returns an empty Map
-    @Override
-    public Map<String, InventoryStock> getInventoryMap() {
-        return new HashMap<>();
-    }
 }

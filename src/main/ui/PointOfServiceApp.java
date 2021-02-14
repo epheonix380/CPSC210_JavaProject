@@ -132,7 +132,7 @@ public class PointOfServiceApp {
     // REQUIRES: isInventory is true
     // EFFECTS: Gets and prints the inventory
     private void getInventory() {
-        Map<String, InventoryStock> inventory = shop.getInventoryMap();
+        Map<String, InventoryStock> inventory = ((InventoryShop)shop).getInventoryMap();
         for (Map.Entry<String,InventoryStock> entry : inventory.entrySet()) {
             InventoryStock stock = entry.getValue();
             System.out.println("Item: " + stock.getName());
@@ -172,8 +172,7 @@ public class PointOfServiceApp {
         String name;
         name = validateString("Name of Item to remove");
         try {
-            NIStock stock = shop.getCatalogue().get(name);
-            shop.removeItemFromCatalogue(stock);
+            shop.removeItemFromCatalogue(name);
             System.out.println("Successfully Removed " + name + " from Catalogue!");
         } catch (NullPointerException e) {
             itemNotFound(name);
@@ -260,9 +259,8 @@ public class PointOfServiceApp {
         int quantity;
         name = validateString("Name of Item to add to cart");
         try {
-            NIStock stock = shop.getCatalogue().get(name);
             quantity = validateInt("Amount of item to add to cart");
-            shop.addToCart(stock,quantity);
+            shop.addToCart(name,quantity);
             System.out.println("Added " + quantity + " of " + name + " to cart");
         } catch (NullPointerException e) {
             itemNotFound(name);
@@ -302,9 +300,8 @@ public class PointOfServiceApp {
         int quantity;
         name = validateString("Name of Item to modify");
         try {
-            NIStock stock = shop.getCatalogue().get(name);
             quantity = validateInt("Modify Amount");
-            shop.addInventory(stock,quantity);
+            ((InventoryShop)shop).addInventory(name,quantity);
         } catch (NullPointerException e) {
             itemNotFound(name);
         }

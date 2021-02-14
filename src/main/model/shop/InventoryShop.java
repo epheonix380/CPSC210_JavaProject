@@ -19,7 +19,7 @@ public class InventoryShop extends Shop {
 
     // EFFECTS: Checks if the inventoryMap contains a key value pair with the given key name
     public Boolean inventoryContains(String name) {
-        return this.inventoryMap.containsKey(name);
+        return this.inventoryMap.containsKey(name.toLowerCase());
     }
 
     // REQUIRES: NonInventoryStock st is a catalogue item, q > 0
@@ -27,16 +27,17 @@ public class InventoryShop extends Shop {
     // EFFECTS: Adds the item to cart ONLY IF the inventory has enough, also adds to existing item if there
     //          is an existing item
     @Override
-    public void addToCart(NIStock st, int q) {
-        InventoryStock inventoryStock = inventoryMap.get(st.getName());
-        InventoryStock cartStock = new InventoryStock(st.getName(), q, st.getPrice(), st.getUnitCost());
+    public void addToCart(String name, int q) {
+        NIStock stock = catalogue.get(name.toLowerCase());
+        InventoryStock inventoryStock = inventoryMap.get(name.toLowerCase());
+        InventoryStock cartStock = new InventoryStock(name, q, stock.getPrice(), stock.getUnitCost());
 
-        if (this.cart.containsKey(st.getName())) {
-            int existingCartQuantity = this.cart.get(st.getName()).getQuantity();
+        if (this.cart.containsKey(name.toLowerCase())) {
+            int existingCartQuantity = this.cart.get(name.toLowerCase()).getQuantity();
             cartStock.modifyInventory(existingCartQuantity);
 
             if (inventoryStock.isSellable(cartStock.getQuantity())) {
-                this.cart.put(st.getName(), cartStock);
+                this.cart.put(stock.getName().toLowerCase(), cartStock);
 
             } else {
                 NotEnoughInventoryError error = new NotEnoughInventoryError(cartStock,inventoryStock);
@@ -46,7 +47,7 @@ public class InventoryShop extends Shop {
 
         } else {
             if (inventoryStock.isSellable(cartStock.getQuantity())) {
-                this.cart.put(st.getName(), cartStock);
+                this.cart.put(name.toLowerCase(), cartStock);
             } else {
                 NotEnoughInventoryError error = new NotEnoughInventoryError(cartStock,inventoryStock);
                 throw error;
@@ -60,9 +61,8 @@ public class InventoryShop extends Shop {
     // REQUIRES: NonInventoryStock stock is part of catalogue
     // MODIFIES: This
     // EFFECTS: Adds to the inventory of given stock
-    @Override
-    public void addInventory(NIStock stock, int quantity) {
-        this.inventoryMap.get(stock.getName()).modifyInventory(quantity);
+    public void addInventory(String name, int quantity) {
+        this.inventoryMap.get(name.toLowerCase()).modifyInventory(quantity);
     }
 
     // REQUIRES: name is unique, price > 0, unitCost > 0
@@ -71,17 +71,17 @@ public class InventoryShop extends Shop {
     @Override
     public void addToCatalogue(String name, int price, int unitCost) {
         NIStock stock = new NIStock(name, price, unitCost);
-        this.catalogue.put(name,stock);
+        this.catalogue.put(name.toLowerCase(),stock);
         InventoryStock inventoryStock = new InventoryStock(name, 0, price, unitCost);
-        this.inventoryMap.put(name, inventoryStock);
+        this.inventoryMap.put(name.toLowerCase(), inventoryStock);
     }
 
     // MODIFIES: This
     // EFFECTS: Removes given stock from catalogue and inventory
     @Override
-    public void removeItemFromCatalogue(NIStock stock) {
-        this.catalogue.remove(stock.getName());
-        this.inventoryMap.remove(stock.getName());
+    public void removeItemFromCatalogue(String name) {
+        this.catalogue.remove(name.toLowerCase());
+        this.inventoryMap.remove(name.toLowerCase());
     }
 
     // MODIFIES: This
@@ -95,12 +95,12 @@ public class InventoryShop extends Shop {
             InventoryStock stock = entry.getValue();
             String name = stock.getName();
             int quantity = stock.getQuantity();
-            InventoryStock requestedStock = inventoryMap.get(name);
+            InventoryStock requestedStock = inventoryMap.get(name.toLowerCase());
 
             boolean isSuccess = requestedStock.sell(quantity);
             if (isSuccess) {
                 total += stock.getValue();
-                soldItems.put(entry.getKey(),entry.getValue());
+                soldItems.put(entry.getKey().toLowerCase(),entry.getValue());
             } else {
                 NotEnoughInventoryError error = new NotEnoughInventoryError(stock, requestedStock);
                 throw error;
