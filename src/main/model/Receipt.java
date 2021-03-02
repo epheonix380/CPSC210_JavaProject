@@ -1,13 +1,14 @@
 package model;
 
 import model.stock.InventoryStock;
+import model.stock.NIStock;
+import org.json.JSONObject;
+import persistence.JsonConvertable;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 // Represents all the items purchased in a purchase, having a Map of items that were sold and the total
-public class Receipt {
+public class Receipt implements JsonConvertable {
 
     final int total;
     final Map<String,InventoryStock> items;
@@ -24,6 +25,47 @@ public class Receipt {
         this.total = total;
         this.items = items;
         dateTime = new Date();
+    }
+
+    public Receipt(JSONObject json) {
+        this.total = json.getInt("total");
+        this.items = itemsFromJson(json.getJSONObject("items"));
+        this.dateTime = new Date(json.getInt("dateTime"));
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+
+        json.put("total", total);
+        json.put("items", itemsToJson());
+        json.put("dateTime", dateTime.getTime());
+
+        return json;
+    }
+
+    private Map<String, InventoryStock> itemsFromJson(JSONObject json) {
+        Map<String, InventoryStock> items = new TreeMap<>();
+        Iterator<String> jsonKeys = json.keys();
+
+        for (Iterator<String> it = jsonKeys; it.hasNext(); ) {
+            String key = it.next();
+            JSONObject jsonObject = json.getJSONObject(key);
+            InventoryStock stock = new InventoryStock(jsonObject);
+            items.put(key, stock);
+        }
+
+        return items;
+    }
+
+    private JSONObject itemsToJson() {
+        JSONObject json = new JSONObject();
+
+        for (Map.Entry<String,InventoryStock> entry : items.entrySet()) {
+            InventoryStock stock = entry.getValue();
+            json.put(entry.getKey(),stock.toJson());
+        }
+
+        return json;
     }
 
     public int getTotal() {

@@ -1,12 +1,15 @@
 package ui;
 
 import errors.NotEnoughInventoryError;
+import exceptions.BadlyFormatedShopFile;
 import model.Receipt;
 import model.shop.InventoryShop;
 import model.shop.NonInventoryShop;
 import model.shop.Shop;
 import model.stock.InventoryStock;
 import model.stock.NIStock;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import java.util.*;
 
@@ -54,12 +57,25 @@ public class PointOfServiceApp {
         String command;
         command = input.next();
         command = command.toLowerCase();
+        JsonReader reader = new JsonReader("./data/shops/shop.json");
 
         if (command.equals("ni")) {
             shop = new NonInventoryShop();
             isInventory = false;
         } else if (command.equals("q")) {
             run = false;
+        } else if (command.equals("l")) {
+            try {
+                shop = reader.read();
+                isInventory = reader.isInventory();
+            } catch (BadlyFormatedShopFile e) {
+                System.out.println(e.location);
+                run = false;
+            } catch (Exception e) {
+                System.out.println("A catastrophic error as occurred");
+                System.out.println(e.toString());
+                run = false;
+            }
         } else {
             isInventory = true;
             shop = new InventoryShop();
@@ -73,6 +89,7 @@ public class PointOfServiceApp {
         System.out.println("\nSelect from:");
         System.out.println("\ti -> Inventory Shop");
         System.out.println("\tni -> Non-Inventory SHop");
+        System.out.println("\tl -> Load Existing Shop");
         System.out.println("\tq -> quit");
     }
 

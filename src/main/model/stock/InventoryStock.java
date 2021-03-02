@@ -1,6 +1,8 @@
 package model.stock;
 
 
+import org.json.JSONObject;
+
 import java.util.Date;
 
 // Represents an InventoryStock, which track the inventory said stock in the store
@@ -18,6 +20,24 @@ public class InventoryStock extends Stock {
         super(name, price, unitCost);
         this.quantity = quantity;
 
+    }
+
+    public InventoryStock(JSONObject json) {
+        super(json);
+        int quantity = json.getInt("quantity");
+        this.quantity = quantity;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+
+        json.put("name",this.name);
+        json.put("unitCost",this.unitCost);
+        json.put("price",this.price);
+        json.put("quantity",this.quantity);
+
+        return json;
     }
 
     public int getValue() {

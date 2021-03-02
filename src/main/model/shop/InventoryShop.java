@@ -4,14 +4,64 @@ import errors.NotEnoughInventoryError;
 import model.Receipt;
 import model.stock.NIStock;
 import model.stock.InventoryStock;
+import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 
 //Represents InventoryShop, tracks the inventory going in and out of the shop
 public class InventoryShop extends Shop {
 
     private Map<String, InventoryStock> inventoryMap = new HashMap<>();
+
+    public InventoryShop() {
+        super();
+        super.shopType = "inventory";
+    }
+
+    public InventoryShop(JSONObject json) {
+        super(json);
+        this.inventoryMap = inventoryMapFromJson(json.getJSONObject("inventoryMap"));
+        super.shopType = "inventory";
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+
+        json.put("catalogue", super.catalogueToJson());
+        json.put("transactions", super.transactionsToJson());
+        json.put("inventoryMap", inventoryMapToJson());
+
+        return json;
+    }
+
+    private JSONObject inventoryMapToJson() {
+        JSONObject json = new JSONObject();
+
+        for (Map.Entry<String,InventoryStock> entry : inventoryMap.entrySet()) {
+            InventoryStock stock = entry.getValue();
+            json.put(entry.getKey(), stock.toJson());
+        }
+
+        return json;
+    }
+
+    private Map<String, InventoryStock> inventoryMapFromJson(JSONObject json) {
+        Map<String, InventoryStock> inventoryMap = new HashMap<>();
+        Iterator<String> jsonKeys = json.keys();
+
+        for (Iterator<String> it = jsonKeys; it.hasNext(); ) {
+            String key = it.next();
+            JSONObject jsonObject = json.getJSONObject(key);
+            InventoryStock stock = new InventoryStock(jsonObject);
+            inventoryMap.put(key, stock);
+        }
+
+        return inventoryMap;
+    }
 
     public Map<String, InventoryStock> getInventoryMap() {
         return this.inventoryMap;
@@ -63,6 +113,7 @@ public class InventoryShop extends Shop {
     // EFFECTS: Adds to the inventory of given stock
     public void addInventory(String name, int quantity) {
         this.inventoryMap.get(name.toLowerCase()).modifyInventory(quantity);
+        super.save();
     }
 
     // REQUIRES: name is unique, price > 0, unitCost > 0
@@ -74,6 +125,7 @@ public class InventoryShop extends Shop {
         this.catalogue.put(name.toLowerCase(),stock);
         InventoryStock inventoryStock = new InventoryStock(name, 0, price, unitCost);
         this.inventoryMap.put(name.toLowerCase(), inventoryStock);
+        super.save();
     }
 
     // MODIFIES: This
@@ -82,6 +134,7 @@ public class InventoryShop extends Shop {
     public void removeItemFromCatalogue(String name) {
         this.catalogue.remove(name.toLowerCase());
         this.inventoryMap.remove(name.toLowerCase());
+        super.save();
     }
 
     // MODIFIES: This
@@ -110,6 +163,7 @@ public class InventoryShop extends Shop {
         Receipt receipt = new Receipt(total,soldItems);
         this.cart = new HashMap<>();
         transactions.add(receipt);
+        super.save();
         return receipt;
     }
 }

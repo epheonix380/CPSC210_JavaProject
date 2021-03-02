@@ -1,9 +1,12 @@
 package model.stock;
 
 
+import org.json.JSONObject;
+import persistence.JsonConvertable;
+
 // Represents an Item in the shop with a name, the cost to purchase the item (in cents), and the price at which it is
 // sold to the customer (in cents)
-public abstract class Stock {
+public abstract class Stock implements JsonConvertable {
 
     protected String name;
     protected int unitCost;
@@ -21,6 +24,25 @@ public abstract class Stock {
         this.name = name;
         this.unitCost = unitCost;
 
+    }
+
+    public Stock(JSONObject json) {
+        String name = json.getString("name");
+        int price = json.getInt("price");
+        int unitCost = json.getInt("unitCost");
+        this.price = price;
+        this.name = name;
+        this.unitCost = unitCost;
+    }
+
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+
+        json.put("name",this.name);
+        json.put("unitCost",this.unitCost);
+        json.put("price",this.price);
+
+        return json;
     }
 
     public int getUnitCost() {
