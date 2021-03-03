@@ -1,9 +1,9 @@
-package errors;
+package exceptions;
 
 import model.stock.InventoryStock;
 
 // Represents Error that occurs when The amount of items in inventory is smaller than the amount of items requested
-public class NotEnoughInventoryError extends Error {
+public class NotEnoughInventory extends Exception {
 
     private InventoryStock request;
     private InventoryStock currentInventory;
@@ -12,7 +12,7 @@ public class NotEnoughInventoryError extends Error {
     // MODIFIES: This
     // EFFECTS:  currentInventory is the current inventory that is available in the shop
     //           requestInventory is the inventory that has been requested by the customer
-    public NotEnoughInventoryError(InventoryStock request, InventoryStock currentInventory) {
+    public NotEnoughInventory(InventoryStock request, InventoryStock currentInventory) {
         this.currentInventory = currentInventory;
         this.request = request;
     }

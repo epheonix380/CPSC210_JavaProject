@@ -1,32 +1,18 @@
 {
     "shop": {
-        "inventoryMap": {
-            "banana": {
-                "quantity": 1000,
-                "price": 300,
-                "unitCost": 100,
-                "name": "Banana"
-            },
-            "apple": {
-                "quantity": 3000,
-                "price": 200,
-                "unitCost": 100,
-                "name": "Apple"
-            }
-        },
         "transactions": [],
         "catalogue": {
-            "banana": {
-                "price": 300,
-                "unitCost": 100,
-                "name": "Banana"
+            "chicken": {
+                "price": 400,
+                "unitCost": 200,
+                "name": "Chicken"
             },
-            "apple": {
-                "price": 200,
-                "unitCost": 100,
-                "name": "Apple"
+            "beef": {
+                "price": 2,
+                "unitCost": 1,
+                "name": "Beef"
             }
         }
     },
-    "shopTypeString": "inventory"
+    "shopTypeString": "nonInventory"
 }

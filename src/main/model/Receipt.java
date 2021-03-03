@@ -30,7 +30,7 @@ public class Receipt implements JsonConvertable {
     public Receipt(JSONObject json) {
         this.total = json.getInt("total");
         this.items = itemsFromJson(json.getJSONObject("items"));
-        this.dateTime = new Date(json.getInt("dateTime"));
+        this.dateTime = new Date(json.getLong("dateTime"));
     }
 
     public JSONObject toJson() {

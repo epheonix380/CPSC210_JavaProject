@@ -1,6 +1,6 @@
 package model.shop;
 
-import errors.NotEnoughInventoryError;
+import exceptions.NotEnoughInventory;
 import model.Receipt;
 import model.stock.NIStock;
 import model.stock.InventoryStock;
@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.TreeMap;
 
 //Represents InventoryShop, tracks the inventory going in and out of the shop
 public class InventoryShop extends Shop {
@@ -77,7 +76,7 @@ public class InventoryShop extends Shop {
     // EFFECTS: Adds the item to cart ONLY IF the inventory has enough, also adds to existing item if there
     //          is an existing item
     @Override
-    public void addToCart(String name, int q) {
+    public void addToCart(String name, int q) throws NotEnoughInventory {
         NIStock stock = catalogue.get(name.toLowerCase());
         InventoryStock inventoryStock = inventoryMap.get(name.toLowerCase());
         InventoryStock cartStock = new InventoryStock(name, q, stock.getPrice(), stock.getUnitCost());
@@ -90,7 +89,7 @@ public class InventoryShop extends Shop {
                 this.cart.put(stock.getName().toLowerCase(), cartStock);
 
             } else {
-                NotEnoughInventoryError error = new NotEnoughInventoryError(cartStock,inventoryStock);
+                NotEnoughInventory error = new NotEnoughInventory(cartStock,inventoryStock);
                 throw error;
 
             }
@@ -99,7 +98,7 @@ public class InventoryShop extends Shop {
             if (inventoryStock.isSellable(cartStock.getQuantity())) {
                 this.cart.put(name.toLowerCase(), cartStock);
             } else {
-                NotEnoughInventoryError error = new NotEnoughInventoryError(cartStock,inventoryStock);
+                NotEnoughInventory error = new NotEnoughInventory(cartStock,inventoryStock);
                 throw error;
             }
         }
@@ -128,6 +127,21 @@ public class InventoryShop extends Shop {
         super.save();
     }
 
+    @Override
+    public void editCatalogue(String name, int newPrice, int newUnitCost) {
+        NIStock stock = catalogue.get(name.toLowerCase());
+        int price = newPrice == 0 ? stock.getPrice() : newPrice;
+        int unitCost = newUnitCost == 0 ? stock.getUnitCost() : newUnitCost;
+        stock.setPrice(price);
+        stock.setUnitCost(unitCost);
+        catalogue.put(name.toLowerCase(),stock);
+        InventoryStock inStock = inventoryMap.get(name.toLowerCase());
+        inStock.setPrice(price);
+        inStock.setUnitCost(unitCost);
+        inventoryMap.put(name.toLowerCase(),inStock);
+        save();
+    }
+
     // MODIFIES: This
     // EFFECTS: Removes given stock from catalogue and inventory
     @Override
@@ -140,7 +154,7 @@ public class InventoryShop extends Shop {
     // MODIFIES: This
     // EFFECT: Takes all the items from cart and attempts to purchase them
     @Override
-    public Receipt makePurchase() {
+    public Receipt makePurchase() throws NotEnoughInventory {
         int total = 0;
         Map<String, InventoryStock> soldItems = new HashMap<>();
 
@@ -155,7 +169,7 @@ public class InventoryShop extends Shop {
                 total += stock.getValue();
                 soldItems.put(entry.getKey().toLowerCase(),entry.getValue());
             } else {
-                NotEnoughInventoryError error = new NotEnoughInventoryError(stock, requestedStock);
+                NotEnoughInventory error = new NotEnoughInventory(stock, requestedStock);
                 throw error;
             }
 

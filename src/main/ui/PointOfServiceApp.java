@@ -1,15 +1,11 @@
 package ui;
 
-import errors.NotEnoughInventoryError;
-import exceptions.BadlyFormatedShopFile;
+import exceptions.NotEnoughInventory;
 import model.Receipt;
 import model.shop.InventoryShop;
-import model.shop.NonInventoryShop;
 import model.shop.Shop;
 import model.stock.InventoryStock;
 import model.stock.NIStock;
-import persistence.JsonReader;
-import persistence.JsonWriter;
 
 import java.util.*;
 
@@ -22,17 +18,18 @@ public class PointOfServiceApp {
     private Boolean active;
 
     // EFFECTS: Runs the application
-    public PointOfServiceApp() {
+    public PointOfServiceApp(Shop shop, Boolean isInventory) {
+        this.shop = shop;
+        this.isInventory = isInventory;
+        input = new Scanner(System.in);
         runApp();
     }
 
     // MODIFIES: this
     // EFFECTS: Processes the user input
     private void runApp() {
-        Boolean run;
+        Boolean run = true;
         String command;
-
-        run = init();
 
         while (run) {
             displayMenu();
@@ -48,50 +45,6 @@ public class PointOfServiceApp {
         }
     }
 
-    // MODIFIES: This
-    // EFFECTS: Initializes the application
-    private Boolean init() {
-        input = new Scanner(System.in);
-        boolean run = true;
-        displayStartup();
-        String command;
-        command = input.next();
-        command = command.toLowerCase();
-        JsonReader reader = new JsonReader("./data/shops/shop.json");
-
-        if (command.equals("ni")) {
-            shop = new NonInventoryShop();
-            isInventory = false;
-        } else if (command.equals("q")) {
-            run = false;
-        } else if (command.equals("l")) {
-            try {
-                shop = reader.read();
-                isInventory = reader.isInventory();
-            } catch (BadlyFormatedShopFile e) {
-                System.out.println(e.location);
-                run = false;
-            } catch (Exception e) {
-                System.out.println("A catastrophic error as occurred");
-                System.out.println(e.toString());
-                run = false;
-            }
-        } else {
-            isInventory = true;
-            shop = new InventoryShop();
-        }
-
-        return run;
-    }
-
-    // EFFECTS: Prints the startup menu
-    private void displayStartup() {
-        System.out.println("\nSelect from:");
-        System.out.println("\ti -> Inventory Shop");
-        System.out.println("\tni -> Non-Inventory SHop");
-        System.out.println("\tl -> Load Existing Shop");
-        System.out.println("\tq -> quit");
-    }
 
     // EFFECTS: Prints the normal menu
     private void displayMenu() {
@@ -295,7 +248,7 @@ public class PointOfServiceApp {
             System.out.println("Added " + quantity + " of " + name + " to cart");
         } catch (NullPointerException e) {
             itemNotFound(name);
-        } catch (NotEnoughInventoryError e) {
+        } catch (NotEnoughInventory e) {
             System.out.println(e.errorMessage());
         }
     }
@@ -317,7 +270,7 @@ public class PointOfServiceApp {
             }
             destroyCart();
             active = false;
-        } catch (NotEnoughInventoryError error) {
+        } catch (NotEnoughInventory error) {
             System.out.println(error.errorMessage());
         }
 

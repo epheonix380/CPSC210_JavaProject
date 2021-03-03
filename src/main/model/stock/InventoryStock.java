@@ -40,8 +40,10 @@ public class InventoryStock extends Stock {
         return json;
     }
 
-    public int getValue() {
-        return this.quantity * this.price;
+    public long getValue() {
+        long quantity = this.getQuantity();
+        long price = this.getPrice();
+        return quantity * price;
     }
 
     public int getQuantity() {

@@ -1,6 +1,6 @@
 package model.shop;
 
-import errors.NotEnoughInventoryError;
+import exceptions.NotEnoughInventory;
 import model.stock.InventoryStock;
 import model.Receipt;
 import model.stock.NIStock;
@@ -31,9 +31,12 @@ public abstract class Shop implements JsonConvertable {
         this.saver = new JsonWriter(saveDestination);
     }
 
+    // MODIFIES: This
+    // EFFECTS: Takes a JSONObject and unpacks it into Shop
+    //
     public Shop(JSONObject json) {
         this.catalogue = catalogueFromJson(json.getJSONObject("catalogue"));
-        this.transactions = receiptsFromJson(json.getJSONArray("transactions"));
+        this.transactions = transactionsFromJson(json.getJSONArray("transactions"));
         this.cart = new HashMap<>();
         this.saver = new JsonWriter(saveDestination);
     }
@@ -42,6 +45,7 @@ public abstract class Shop implements JsonConvertable {
         return shopType;
     }
 
+    // EFFECTS: Saves the current state of shop class
     public void save() {
         try {
             saver.write(this);
@@ -50,7 +54,7 @@ public abstract class Shop implements JsonConvertable {
         }
     }
 
-    protected List<Receipt> receiptsFromJson(JSONArray json) {
+    protected List<Receipt> transactionsFromJson(JSONArray json) {
         List<Receipt> receipts = new ArrayList<>();
         Iterator<Object> jsonReceipts = json.iterator();
         int i = 0;
@@ -58,9 +62,9 @@ public abstract class Shop implements JsonConvertable {
         for (Iterator<Object> it = jsonReceipts; it.hasNext(); ) {
             JSONObject receiptJson = json.getJSONObject(i);
             Receipt receipt = new Receipt(receiptJson);
-
             receipts.add(receipt);
             i++;
+            it.next();
         }
 
         return receipts;
@@ -153,7 +157,7 @@ public abstract class Shop implements JsonConvertable {
     // REQUIRES: NonInventoryStock st is a catalogue item, q > 0
     // MODIFIES: This
     // EFFECTS: Adds the item to cart if there is an existing same type of item it adds the two together
-    public void addToCart(String name, int q) {
+    public void addToCart(String name, int q) throws NotEnoughInventory {
         NIStock stock = catalogue.get(name.toLowerCase());
         InventoryStock inventoryStock = new InventoryStock(name, q, stock.getPrice(), stock.getUnitCost());
         if (this.cart.containsKey(name.toLowerCase())) {
@@ -202,5 +206,5 @@ public abstract class Shop implements JsonConvertable {
 
     // MODIFIES: This
     // EFFECT: Takes all the items from cart and attempts to purchase them
-    public abstract Receipt makePurchase();
+    public abstract Receipt makePurchase() throws NotEnoughInventory;
 }

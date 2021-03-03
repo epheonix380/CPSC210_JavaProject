@@ -1,13 +1,13 @@
 package model;
 
-import errors.NotEnoughInventoryError;
+import exceptions.NotEnoughInventory;
 import model.shop.InventoryShop;
 import model.shop.NonInventoryShop;
 import model.shop.Shop;
+import model.stock.InventoryStock;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -128,7 +128,11 @@ class ShopModelsTest {
     public void inventoryShopCartAddTest() {
         inventoryShopInventoryIn();
 
-        shop1.addToCart("Banana", 5);
+        try {
+            shop1.addToCart("Banana", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
 
         assertFalse(shop1.getCart().isEmpty());
         assertEquals("Banana",shop1.getCart().get("banana").getName());
@@ -142,7 +146,11 @@ class ShopModelsTest {
     public void inventoryShopCartDestroyTest() {
         inventoryShopInventoryIn();
 
-        shop1.addToCart("Banana", 5);
+        try {
+            shop1.addToCart("Banana", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         shop1.destroyCart();
 
         assertTrue(shop1.getCart().isEmpty());
@@ -152,7 +160,11 @@ class ShopModelsTest {
     public void inventoryShopCartModifyTest() {
         inventoryShopInventoryIn();
 
-        shop1.addToCart("Banana", 5);
+        try {
+            shop1.addToCart("Banana", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         shop1.modifyCart("Banana",5);
 
         assertEquals(10,shop1.getCart().get("banana").getQuantity());
@@ -162,7 +174,11 @@ class ShopModelsTest {
     public void nonInventoryShopCartAddTest() {
         allShopAddItemToCatalogue();
 
-        shop2.addToCart("Banana", 5);
+        try {
+            shop2.addToCart("Banana", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
 
         assertFalse(shop2.getCart().isEmpty());
         assertEquals("Banana",shop2.getCart().get("banana").getName());
@@ -176,7 +192,11 @@ class ShopModelsTest {
     public void nonInventoryShopCartDestroyTest() {
         allShopAddItemToCatalogue();
 
-        shop2.addToCart("Banana", 5);
+        try {
+            shop2.addToCart("Banana", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         shop2.destroyCart();
 
         assertTrue(shop2.getCart().isEmpty());
@@ -186,7 +206,11 @@ class ShopModelsTest {
     public void nonInventoryShopCartModifyTest() {
         allShopAddItemToCatalogue();
 
-        shop2.addToCart("Banana", 5);
+        try {
+            shop2.addToCart("Banana", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         shop2.modifyCart("Banana",5);
 
         assertEquals(10,shop2.getCart().get("banana").getQuantity());
@@ -196,12 +220,21 @@ class ShopModelsTest {
     public void sellItemFromNonInventoryShopSuccessfully(){
         inventoryShopInventoryIn();
 
-        shop2.addToCart("Banana", 5);
-        shop2.addToCart("Apple", 5);
-
+        try {
+            shop2.addToCart("Banana", 5);
+            shop2.addToCart("Apple", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         assertEquals(5*300+5*500,shop2.getCartTotal());
-
-        Receipt receipt = shop2.makePurchase();
+        Receipt receipt;
+        try {
+            receipt = shop2.makePurchase();
+        } catch (Exception e) {
+            Map<String, InventoryStock> map = new HashMap<>();
+            receipt = new Receipt(0,map);
+            assertFalse(true);
+        }
 
         assertEquals(5*300+5*500,receipt.total);
         assertEquals(5,receipt.items.get("banana").getQuantity());
@@ -216,15 +249,24 @@ class ShopModelsTest {
     public void sellItemFromNonInventoryShopSuccessfullyWithCartModification() {
         inventoryShopInventoryIn();
 
-        shop2.addToCart("Banana", 5);
-        shop2.addToCart("Apple", 5);
-        shop2.addToCart("Banana", 5);
-        shop1.removeFromCart("Apple");
-        shop1.addToCart("Apple",5);
-
+        try {
+            shop2.addToCart("Banana", 5);
+            shop2.addToCart("Apple", 5);
+            shop2.addToCart("Banana", 5);
+            shop1.removeFromCart("Apple");
+            shop1.addToCart("Apple", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         assertEquals(10*300+5*500,shop2.getCartTotal());
-
-        Receipt receipt = shop2.makePurchase();
+        Receipt receipt;
+        try {
+            receipt = shop2.makePurchase();
+        } catch (Exception e) {
+            Map<String, InventoryStock> map = new HashMap<>();
+            receipt = new Receipt(0,map);
+            assertFalse(true);
+        }
 
         assertEquals(10*300+5*500,receipt.total);
         assertEquals(10,receipt.items.get("banana").getQuantity());
@@ -239,12 +281,22 @@ class ShopModelsTest {
     public void sellItemFromInventoryShopSuccessfully(){
         inventoryShopInventoryIn();
 
-        shop1.addToCart("Banana", 5);
-        shop1.addToCart("Apple", 5);
-
+        try {
+            shop1.addToCart("Banana", 5);
+            shop1.addToCart("Apple", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         assertEquals(5*300+5*500,shop1.getCartTotal());
 
-        Receipt receipt = shop1.makePurchase();
+        Receipt receipt;
+        try {
+            receipt = shop1.makePurchase();
+        } catch (Exception e) {
+            Map<String, InventoryStock> map = new HashMap<>();
+            receipt = new Receipt(0,map);
+            assertFalse(true);
+        }
 
         assertEquals(5*300+5*500,receipt.total);
         assertEquals(5,receipt.items.get("banana").getQuantity());
@@ -259,15 +311,25 @@ class ShopModelsTest {
     public void sellItemFromInventoryShopSuccessfullyWithCartModification() {
         inventoryShopInventoryIn();
 
-        shop1.addToCart("Banana", 5);
-        shop1.addToCart("Apple", 5);
-        shop1.addToCart("Banana", 5);
-        shop1.removeFromCart("Apple");
-        shop1.addToCart("Apple",5);
-
+        try {
+            shop1.addToCart("Banana", 5);
+            shop1.addToCart("Apple", 5);
+            shop1.addToCart("Banana", 5);
+            shop1.removeFromCart("Apple");
+            shop1.addToCart("Apple", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         assertEquals(10*300+5*500,shop1.getCartTotal());
 
-        Receipt receipt = shop1.makePurchase();
+        Receipt receipt;
+        try {
+            receipt = shop1.makePurchase();
+        } catch (Exception e) {
+            Map<String, InventoryStock> map = new HashMap<>();
+            receipt = new Receipt(0,map);
+            assertFalse(true);
+        }
 
         assertEquals(10*300+5*500,receipt.total);
         assertEquals(10,receipt.items.get("banana").getQuantity());
@@ -282,9 +344,12 @@ class ShopModelsTest {
     public void sellItemFromInventoryShopUnsuccessfully() {
         sellItemFromInventoryShopSuccessfully();
 
-        shop1.addToCart("Banana", 5);
-
-        NotEnoughInventoryError exception = assertThrows(NotEnoughInventoryError.class, () -> {
+        try {
+            shop1.addToCart("Banana", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+        NotEnoughInventory exception = assertThrows(NotEnoughInventory.class, () -> {
             shop1.addToCart("Apple", 5);
         });
 
@@ -299,11 +364,14 @@ class ShopModelsTest {
     public void sellItemFromInventoryShopUnsuccessfullyWithCartModification() {
         inventoryShopInventoryIn();
 
-        shop1.addToCart("Banana", 5);
-        shop1.addToCart("Apple", 5);
-        shop1.addToCart("Banana", 5);
-
-        NotEnoughInventoryError exception = assertThrows(NotEnoughInventoryError.class, () -> {
+        try {
+            shop1.addToCart("Banana", 5);
+            shop1.addToCart("Apple", 5);
+            shop1.addToCart("Banana", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+        NotEnoughInventory exception = assertThrows(NotEnoughInventory.class, () -> {
             shop1.addToCart("Apple", 5);
         });
 
@@ -318,12 +386,15 @@ class ShopModelsTest {
     public void sellItemFromInventoryShopUnsuccessfullyWithInventoryModification() {
         inventoryShopInventoryIn();
 
-        shop1.addToCart("Banana", 5);
-        shop1.addToCart("Apple", 5);
-        shop1.addToCart("Banana", 5);
-        shop1.addInventory("Apple", -5);
-
-        NotEnoughInventoryError exception = assertThrows(NotEnoughInventoryError.class, () -> {
+        try {
+            shop1.addToCart("Banana", 5);
+            shop1.addToCart("Apple", 5);
+            shop1.addToCart("Banana", 5);
+            shop1.addInventory("Apple", -5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+        NotEnoughInventory exception = assertThrows(NotEnoughInventory.class, () -> {
             shop1.makePurchase();
         });
 
