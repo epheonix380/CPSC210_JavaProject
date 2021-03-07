@@ -1,6 +1,9 @@
 package model;
 
+import exceptions.ItemAlreadyExists;
+import exceptions.ItemNotFound;
 import exceptions.NotEnoughInventory;
+import exceptions.NotPositiveInteger;
 import model.shop.InventoryShop;
 import model.shop.NonInventoryShop;
 import model.shop.Shop;
@@ -17,8 +20,8 @@ class ShopModelsTest {
     private Shop shop2;
 
     public void createShop(){
-        shop1 = new InventoryShop();
-        shop2 = new NonInventoryShop();
+        shop1 = new InventoryShop("invTestShop");
+        shop2 = new NonInventoryShop("nonInvTestShop");
     }
 
     @Test
@@ -26,10 +29,14 @@ class ShopModelsTest {
         createShop();
 
         // Adding items to Catalogue
-        shop1.addToCatalogue("Banana",300,250);
-        shop1.addToCatalogue("Apple",500,300);
-        shop2.addToCatalogue("Banana",300,250);
-        shop2.addToCatalogue("Apple",500,300);
+        try {
+            shop1.addToCatalogue("Banana",300,250);
+            shop1.addToCatalogue("Apple",500,300);
+            shop2.addToCatalogue("Banana",300,250);
+            shop2.addToCatalogue("Apple",500,300);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
 
         // Testing Inventory Shop
         assertTrue(shop1.catalogueContains("Banana"));
@@ -50,6 +57,40 @@ class ShopModelsTest {
         assertEquals(500,shop2.getCatalogue().get("apple").getPrice());
         assertEquals(250,shop2.getCatalogue().get("banana").getUnitCost());
         assertEquals(300,shop2.getCatalogue().get("apple").getUnitCost());
+    }
+
+    @Test
+    public void allShopAddItemToCatalogueException() {
+        allShopAddItemToCatalogue();
+
+        Exception itemAlreadyExists1 = assertThrows(ItemAlreadyExists.class, () -> {
+            shop1.addToCatalogue("Banana", 200,100);
+        });
+        Exception itemAlreadyExists2 = assertThrows(ItemAlreadyExists.class, () -> {
+            shop2.addToCatalogue("Banana", 200,100);
+        });
+        Exception negativeInteger1a = assertThrows(NotPositiveInteger.class, () -> {
+            shop1.addToCatalogue("Unique Name", 0, 100);
+        });
+        Exception negativeInteger1b = assertThrows(NotPositiveInteger.class, () -> {
+            shop1.addToCatalogue("Unique Name", 100, -200);
+        });
+        Exception negativeInteger2a = assertThrows(NotPositiveInteger.class, () -> {
+            shop2.addToCatalogue("Unique Name", -150, 100);
+        });
+        Exception negativeInteger2b = assertThrows(NotPositiveInteger.class, () -> {
+            shop2.addToCatalogue("Unique Name", 100, -250);
+        });
+        String strA = "The inputted integer ";
+        String strB = " is either zero or smaller. The int needs to be a positive integer";
+        String str1 = strA + "0" + strB;
+        String str2 = strA + "-200" + strB;
+        String str3 = strA + "-150" + strB;
+        String str4 = strA + "-250" + strB;
+        assertEquals(str1,negativeInteger1a.getMessage());
+        assertEquals(str2,negativeInteger1b.getMessage());
+        assertEquals(str3,negativeInteger2a.getMessage());
+        assertEquals(str4,negativeInteger2b.getMessage());
     }
 
     @Test
@@ -57,16 +98,19 @@ class ShopModelsTest {
         createShop();
 
         // Adding items to Catalogue
-        shop1.addToCatalogue("Banana",1300,1250);
-        shop1.addToCatalogue("Apple",500,1300);
-        shop2.addToCatalogue("Banana",1300,1250);
-        shop2.addToCatalogue("Apple",1500,300);
+        try {
+            shop1.addToCatalogue("Banana", 1300, 1250);
+            shop1.addToCatalogue("Apple", 500, 1300);
+            shop2.addToCatalogue("Banana", 1300, 1250);
+            shop2.addToCatalogue("Apple", 1500, 300);
 
-        shop1.editCatalogue("Banana",300,250);
-        shop1.editCatalogue("Apple",0,300);
-        shop2.editCatalogue("Banana",300,250);
-        shop2.editCatalogue("Apple",500,0);
-
+            shop1.editCatalogue("Banana", 300, 250);
+            shop1.editCatalogue("Apple", 0, 300);
+            shop2.editCatalogue("Banana", 300, 250);
+            shop2.editCatalogue("Apple", 500, 0);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         // Testing Inventory Shop
         assertTrue(shop1.catalogueContains("Banana"));
         assertTrue(shop1.catalogueContains("Apple"));
@@ -89,27 +133,87 @@ class ShopModelsTest {
     }
 
     @Test
+    public void allShopEditCatalogueException(){
+        allShopEditCatalogue();
+
+        Exception itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
+            shop1.editCatalogue("Dragon Fruit", 200,100);
+        });
+        Exception itemNotFound2 = assertThrows(ItemNotFound.class, () -> {
+            shop2.editCatalogue("Dragon Fruit", 200,100);
+        });
+        Exception negativeInteger1a = assertThrows(NotPositiveInteger.class, () -> {
+            shop1.editCatalogue("Banana", -1, 100);
+        });
+        Exception negativeInteger1b = assertThrows(NotPositiveInteger.class, () -> {
+            shop1.editCatalogue("Banana", 100, -200);
+        });
+        Exception negativeInteger2a = assertThrows(NotPositiveInteger.class, () -> {
+            shop2.editCatalogue("Banana", -150, 100);
+        });
+        Exception negativeInteger2b = assertThrows(NotPositiveInteger.class, () -> {
+            shop2.editCatalogue("Banana", 100, -250);
+        });
+        String strA = "The inputted integer ";
+        String strB = " is either zero or smaller. The int needs to be a positive integer";
+        String str1 = strA + "-1" + strB;
+        String str2 = strA + "-200" + strB;
+        String str3 = strA + "-150" + strB;
+        String str4 = strA + "-250" + strB;
+        assertEquals(str1,negativeInteger1a.getMessage());
+        assertEquals(str2,negativeInteger1b.getMessage());
+        assertEquals(str3,negativeInteger2a.getMessage());
+        assertEquals(str4,negativeInteger2b.getMessage());
+    }
+
+    @Test
     public void allShopRemoveItemFromCatalogue() {
         createShop();
 
         // Adding then removing item from shop
-        shop1.addToCatalogue("Cookie",1000,100);
-        shop2.addToCatalogue("Cookie",1000,100);
-        shop1.removeItemFromCatalogue("Cookie");
-        shop2.removeItemFromCatalogue("Cookie");
-
+        try {
+            shop1.addToCatalogue("Cookie", 1000, 100);
+            shop2.addToCatalogue("Cookie", 1000, 100);
+            shop1.removeItemFromCatalogue("Cookie");
+            shop2.removeItemFromCatalogue("Cookie");
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         // Testing item existence
         assertFalse(shop1.catalogueContains("Cookie"));
         assertFalse(shop2.catalogueContains("Cookie"));
     }
 
     @Test
+    public void allShopRemoveItemFromCatalogueException() {
+        createShop();
+
+        // Adding then removing item from shop
+        try {
+            shop1.addToCatalogue("Cookie", 1000, 100);
+            shop2.addToCatalogue("Cookie", 1000, 100);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
+
+        Exception itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
+            shop1.removeItemFromCatalogue("Dragon Fruit");
+        });
+        Exception itemNotFound2 = assertThrows(ItemNotFound.class, () -> {
+            shop2.removeItemFromCatalogue("Dragon Fruit");
+        });
+    }
+
+    @Test
     public void inventoryShopInventoryIn(){
         allShopAddItemToCatalogue();
 
-        shop1.addInventory("Banana", 50);
-        shop1.addInventory("Apple", 5);
-
+        try {
+            shop1.addInventory("Banana", 50);
+            shop1.addInventory("Apple", 5);
+        } catch (Exception e) {
+            assertFalse(true);
+        }
         assertTrue(shop1.inventoryContains("Banana"));
         assertTrue(shop1.inventoryContains("Apple"));
         assertEquals("Banana",shop1.getInventoryMap().get("banana").getName());
@@ -122,6 +226,15 @@ class ShopModelsTest {
         assertEquals(5,shop1.getInventoryMap().get("apple").getQuantity());
         assertEquals(50 * 300,shop1.getInventoryMap().get("banana").getValue());
         assertEquals(5 * 500,shop1.getInventoryMap().get("apple").getValue());
+    }
+
+    @Test
+    public void inventoryShopInventoryInException(){
+        allShopAddItemToCatalogue();
+
+        Exception itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
+            shop1.addInventory("Dragon Fruit", 50);
+        });
     }
 
     @Test
@@ -140,6 +253,30 @@ class ShopModelsTest {
         assertEquals(300*5,shop1.getCart().get("banana").getValue());
         assertEquals(5,shop1.getCart().get("banana").getQuantity());
         assertEquals(250,shop1.getCart().get("banana").getUnitCost());
+    }
+
+    @Test
+    public void inventoryShopCartAddTestExceptions(){
+        inventoryShopInventoryIn();
+
+        Exception itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
+            shop1.addToCart("Dragon Fruit", 5);
+        });
+        Exception notEnoughInventory1 = assertThrows(NotEnoughInventory.class, () -> {
+            shop1.addToCart("Banana", 10000);
+        });
+        Exception notPositiveInteger1 = assertThrows(NotPositiveInteger.class, () -> {
+            shop1.addToCart("Banana", 0);
+        });
+        Exception notPositiveInteger2 = assertThrows(NotPositiveInteger.class, () -> {
+            shop1.addToCart("Banana", -1);
+        });
+        String strA = "The inputted integer ";
+        String strB = " is either zero or smaller. The int needs to be a positive integer";
+        String str1 = strA + "0" + strB;
+        String str2 = strA + "-1" + strB;
+        assertEquals(str1,notPositiveInteger1.getMessage());
+        assertEquals(str2,notPositiveInteger2.getMessage());
     }
 
     @Test
@@ -162,13 +299,29 @@ class ShopModelsTest {
 
         try {
             shop1.addToCart("Banana", 5);
+            shop1.addToCart("Apple", 5);
+            shop1.modifyCart("Banana",5);
+            shop1.removeFromCart("Apple");
         } catch (Exception e) {
             assertFalse(true);
         }
-        shop1.modifyCart("Banana",5);
 
         assertEquals(10,shop1.getCart().get("banana").getQuantity());
+        assertFalse(shop1.getCart().containsKey("apple"));
     }
+
+    @Test
+    public void inventoryShopCartModifyTestException() {
+        inventoryShopInventoryIn();
+
+        Exception itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
+            shop1.modifyCart("Dragon Fruit", 50);
+        });
+        Exception itemNotFound2 = assertThrows(ItemNotFound.class, () -> {
+            shop1.removeFromCart("Dragon Fruit");
+        });
+    }
+
 
     @Test
     public void nonInventoryShopCartAddTest() {
@@ -187,6 +340,28 @@ class ShopModelsTest {
         assertEquals(5,shop2.getCart().get("banana").getQuantity());
         assertEquals(250,shop2.getCart().get("banana").getUnitCost());
     }
+
+    @Test
+    public void nonInventoryShopCartAddTestExceptions(){
+        allShopAddItemToCatalogue();
+
+        Exception itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
+            shop2.addToCart("Dragon Fruit", 5);
+        });
+        Exception notPositiveInteger1 = assertThrows(NotPositiveInteger.class, () -> {
+            shop2.addToCart("Banana", 0);
+        });
+        Exception notPositiveInteger2 = assertThrows(NotPositiveInteger.class, () -> {
+            shop2.addToCart("Banana", -1);
+        });
+        String strA = "The inputted integer ";
+        String strB = " is either zero or smaller. The int needs to be a positive integer";
+        String str1 = strA + "0" + strB;
+        String str2 = strA + "-1" + strB;
+        assertEquals(str1,notPositiveInteger1.getMessage());
+        assertEquals(str2,notPositiveInteger2.getMessage());
+    }
+
 
     @Test
     public void nonInventoryShopCartDestroyTest() {
@@ -208,12 +383,27 @@ class ShopModelsTest {
 
         try {
             shop2.addToCart("Banana", 5);
+            shop2.addToCart("Apple", 5);
+            shop2.modifyCart("Banana",5);
+            shop2.removeFromCart("Apple");
         } catch (Exception e) {
             assertFalse(true);
         }
-        shop2.modifyCart("Banana",5);
 
+        assertFalse(shop2.getCart().containsKey("apple"));
         assertEquals(10,shop2.getCart().get("banana").getQuantity());
+    }
+
+    @Test
+    public void nonInventoryShopCartModifyTestException() {
+        allShopAddItemToCatalogue();
+
+        Exception itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
+            shop2.modifyCart("Dragon Fruit", 50);
+        });
+        Exception itemNotFound2 = assertThrows(ItemNotFound.class, () -> {
+            shop2.removeFromCart("Dragon Fruit");
+        });
     }
 
     @Test
@@ -230,19 +420,20 @@ class ShopModelsTest {
         Receipt receipt;
         try {
             receipt = shop2.makePurchase();
+
+            assertEquals(5*300+5*500,receipt.total);
+            assertEquals(5,receipt.items.get("banana").getQuantity());
+            assertEquals("Banana",receipt.items.get("banana").getName());
+            assertEquals(5*300,receipt.items.get("banana").getValue());
+            assertEquals(5,receipt.items.get("apple").getQuantity());
+            assertEquals("Apple",receipt.items.get("apple").getName());
+            assertEquals(5*500,receipt.items.get("apple").getValue());
+
         } catch (Exception e) {
             Map<String, InventoryStock> map = new HashMap<>();
-            receipt = new Receipt(0,map);
             assertFalse(true);
         }
 
-        assertEquals(5*300+5*500,receipt.total);
-        assertEquals(5,receipt.items.get("banana").getQuantity());
-        assertEquals("Banana",receipt.items.get("banana").getName());
-        assertEquals(5*300,receipt.items.get("banana").getValue());
-        assertEquals(5,receipt.items.get("apple").getQuantity());
-        assertEquals("Apple",receipt.items.get("apple").getName());
-        assertEquals(5*500,receipt.items.get("apple").getValue());
     }
 
     @Test
@@ -253,28 +444,30 @@ class ShopModelsTest {
             shop2.addToCart("Banana", 5);
             shop2.addToCart("Apple", 5);
             shop2.addToCart("Banana", 5);
-            shop1.removeFromCart("Apple");
-            shop1.addToCart("Apple", 5);
+            shop2.removeFromCart("Apple");
+            shop2.addToCart("Apple", 15);
         } catch (Exception e) {
+            System.out.println(e.toString());
             assertFalse(true);
         }
-        assertEquals(10*300+5*500,shop2.getCartTotal());
+        assertEquals(10*300+15*500,shop2.getCartTotal());
         Receipt receipt;
         try {
             receipt = shop2.makePurchase();
+
+            assertEquals(10*300+15*500,receipt.total);
+            assertEquals(10,receipt.items.get("banana").getQuantity());
+            assertEquals("Banana",receipt.items.get("banana").getName());
+            assertEquals(10*300,receipt.items.get("banana").getValue());
+            assertEquals(15,receipt.items.get("apple").getQuantity());
+            assertEquals("Apple",receipt.items.get("apple").getName());
+            assertEquals(15*500,receipt.items.get("apple").getValue());
+
         } catch (Exception e) {
             Map<String, InventoryStock> map = new HashMap<>();
-            receipt = new Receipt(0,map);
             assertFalse(true);
         }
 
-        assertEquals(10*300+5*500,receipt.total);
-        assertEquals(10,receipt.items.get("banana").getQuantity());
-        assertEquals("Banana",receipt.items.get("banana").getName());
-        assertEquals(10*300,receipt.items.get("banana").getValue());
-        assertEquals(5,receipt.items.get("apple").getQuantity());
-        assertEquals("Apple",receipt.items.get("apple").getName());
-        assertEquals(5*500,receipt.items.get("apple").getValue());
     }
 
     @Test
@@ -292,19 +485,20 @@ class ShopModelsTest {
         Receipt receipt;
         try {
             receipt = shop1.makePurchase();
+
+            assertEquals(5*300+5*500,receipt.total);
+            assertEquals(5,receipt.items.get("banana").getQuantity());
+            assertEquals("Banana",receipt.items.get("banana").getName());
+            assertEquals(5*300,receipt.items.get("banana").getValue());
+            assertEquals(5,receipt.items.get("apple").getQuantity());
+            assertEquals("Apple",receipt.items.get("apple").getName());
+            assertEquals(5*500,receipt.items.get("apple").getValue());
+
         } catch (Exception e) {
             Map<String, InventoryStock> map = new HashMap<>();
-            receipt = new Receipt(0,map);
             assertFalse(true);
         }
 
-        assertEquals(5*300+5*500,receipt.total);
-        assertEquals(5,receipt.items.get("banana").getQuantity());
-        assertEquals("Banana",receipt.items.get("banana").getName());
-        assertEquals(5*300,receipt.items.get("banana").getValue());
-        assertEquals(5,receipt.items.get("apple").getQuantity());
-        assertEquals("Apple",receipt.items.get("apple").getName());
-        assertEquals(5*500,receipt.items.get("apple").getValue());
     }
 
     @Test
@@ -325,19 +519,20 @@ class ShopModelsTest {
         Receipt receipt;
         try {
             receipt = shop1.makePurchase();
+
+            assertEquals(10*300+5*500,receipt.total);
+            assertEquals(10,receipt.items.get("banana").getQuantity());
+            assertEquals("Banana",receipt.items.get("banana").getName());
+            assertEquals(10*300,receipt.items.get("banana").getValue());
+            assertEquals(5,receipt.items.get("apple").getQuantity());
+            assertEquals("Apple",receipt.items.get("apple").getName());
+            assertEquals(5*500,receipt.items.get("apple").getValue());
+
         } catch (Exception e) {
             Map<String, InventoryStock> map = new HashMap<>();
-            receipt = new Receipt(0,map);
             assertFalse(true);
         }
 
-        assertEquals(10*300+5*500,receipt.total);
-        assertEquals(10,receipt.items.get("banana").getQuantity());
-        assertEquals("Banana",receipt.items.get("banana").getName());
-        assertEquals(10*300,receipt.items.get("banana").getValue());
-        assertEquals(5,receipt.items.get("apple").getQuantity());
-        assertEquals("Apple",receipt.items.get("apple").getName());
-        assertEquals(5*500,receipt.items.get("apple").getValue());
     }
 
     @Test
@@ -412,13 +607,13 @@ class ShopModelsTest {
         List<Receipt> records = shop2.getRecords();
         Receipt receipt = records.get(0);
 
-        assertEquals(10*300+5*500,receipt.total);
+        assertEquals(10*300+15*500,receipt.total);
         assertEquals(10,receipt.items.get("banana").getQuantity());
         assertEquals("Banana",receipt.items.get("banana").getName());
         assertEquals(10*300,receipt.items.get("banana").getValue());
-        assertEquals(5,receipt.items.get("apple").getQuantity());
+        assertEquals(15,receipt.items.get("apple").getQuantity());
         assertEquals("Apple",receipt.items.get("apple").getName());
-        assertEquals(5*500,receipt.items.get("apple").getValue());
+        assertEquals(15*500,receipt.items.get("apple").getValue());
     }
 
     @Test
@@ -437,5 +632,16 @@ class ShopModelsTest {
         assertEquals(5,receipt.getItems().get("apple").getQuantity());
         assertEquals("Apple",receipt.getItems().get("apple").getName());
         assertEquals(5*500,receipt.getItems().get("apple").getValue());
+    }
+
+    @Test
+    public void receiptExceptionTest() {
+        Map<String,InventoryStock> items = new HashMap<>();
+        NotPositiveInteger exception1 = assertThrows(NotPositiveInteger.class, () -> {
+            Receipt receipt = new Receipt(-1,items);
+        });
+        NotPositiveInteger exception2 = assertThrows(NotPositiveInteger.class, () -> {
+            Receipt receipt = new Receipt(0,items);
+        });
     }
 }

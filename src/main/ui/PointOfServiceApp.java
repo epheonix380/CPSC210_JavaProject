@@ -1,6 +1,9 @@
 package ui;
 
+import exceptions.ItemAlreadyExists;
+import exceptions.ItemNotFound;
 import exceptions.NotEnoughInventory;
+import exceptions.NotPositiveInteger;
 import model.Receipt;
 import model.shop.InventoryShop;
 import model.shop.Shop;
@@ -91,8 +94,10 @@ public class PointOfServiceApp {
         int unitCost = validateInt("New Cost of item, if you wish to keep the original cost, please put 0");
         try {
             shop.editCatalogue(name,price,unitCost);
-        } catch (NullPointerException e) {
+        } catch (ItemNotFound e) {
             itemNotFound(name);
+        } catch (NotPositiveInteger e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -146,8 +151,14 @@ public class PointOfServiceApp {
         name = validateString("Name of Item");
         price = validateInt("Price of Item");
         unitCost = validateInt("Cost of Item");
-        shop.addToCatalogue(name,price,unitCost);
-        System.out.println("Successfully Added " + name + " to Catalogue!");
+        try {
+            shop.addToCatalogue(name,price,unitCost);
+            System.out.println("Successfully Added " + name + " to Catalogue!");
+        } catch (NotPositiveInteger e) {
+            System.out.println(e.getMessage());
+        } catch (ItemAlreadyExists e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     // MODIFIES: This
@@ -158,7 +169,7 @@ public class PointOfServiceApp {
         try {
             shop.removeItemFromCatalogue(name);
             System.out.println("Successfully Removed " + name + " from Catalogue!");
-        } catch (NullPointerException e) {
+        } catch (ItemNotFound e) {
             itemNotFound(name);
         }
 
@@ -232,7 +243,11 @@ public class PointOfServiceApp {
     private void removeFromCart() {
         String name;
         name = validateString("Name of Item to remove from cart");
-        shop.removeFromCart(name);
+        try {
+            shop.removeFromCart(name);
+        } catch (ItemNotFound e) {
+            itemNotFound(name);
+        }
         System.out.println("Removed " + name + " from cart");
     }
 
@@ -246,10 +261,12 @@ public class PointOfServiceApp {
             quantity = validateInt("Amount of item to add to cart");
             shop.addToCart(name,quantity);
             System.out.println("Added " + quantity + " of " + name + " to cart");
-        } catch (NullPointerException e) {
+        } catch (ItemNotFound e) {
             itemNotFound(name);
         } catch (NotEnoughInventory e) {
             System.out.println(e.errorMessage());
+        } catch (NotPositiveInteger e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -272,6 +289,9 @@ public class PointOfServiceApp {
             active = false;
         } catch (NotEnoughInventory error) {
             System.out.println(error.errorMessage());
+        } catch (NotPositiveInteger e) {
+            shop.destroyCart();
+            System.out.println("A catastrophic error has occurred, the cart has been destroyed.");
         }
 
     }
@@ -286,7 +306,7 @@ public class PointOfServiceApp {
         try {
             quantity = validateInt("Modify Amount");
             ((InventoryShop)shop).addInventory(name,quantity);
-        } catch (NullPointerException e) {
+        } catch (ItemNotFound e) {
             itemNotFound(name);
         }
 

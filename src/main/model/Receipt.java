@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.NotPositiveInteger;
 import model.stock.InventoryStock;
 import model.stock.NIStock;
 import org.json.JSONObject;
@@ -21,7 +22,10 @@ public class Receipt implements JsonConvertable {
      * 			the items map is a map of all the items with the String being the item names
      *          dateTime is the date and time when the purchase occurred, this is for record keeping
      */
-    public Receipt(int total, Map<String,InventoryStock> items) {
+    public Receipt(int total, Map<String,InventoryStock> items) throws NotPositiveInteger {
+        if (total <= 0) {
+            throw new NotPositiveInteger(total);
+        }
         this.total = total;
         this.items = items;
         dateTime = new Date();

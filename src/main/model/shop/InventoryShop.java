@@ -1,6 +1,9 @@
 package model.shop;
 
+import exceptions.ItemAlreadyExists;
+import exceptions.ItemNotFound;
 import exceptions.NotEnoughInventory;
+import exceptions.NotPositiveInteger;
 import model.Receipt;
 import model.stock.NIStock;
 import model.stock.InventoryStock;
@@ -15,13 +18,14 @@ public class InventoryShop extends Shop {
 
     private Map<String, InventoryStock> inventoryMap = new HashMap<>();
 
-    public InventoryShop() {
-        super();
+    public InventoryShop(String shopName) {
+        super(shopName);
         super.shopType = "inventory";
+        save();
     }
 
-    public InventoryShop(JSONObject json) {
-        super(json);
+    public InventoryShop(String shopName, JSONObject json) {
+        super(shopName,json);
         this.inventoryMap = inventoryMapFromJson(json.getJSONObject("inventoryMap"));
         super.shopType = "inventory";
     }
@@ -71,29 +75,23 @@ public class InventoryShop extends Shop {
         return this.inventoryMap.containsKey(name.toLowerCase());
     }
 
-    // REQUIRES: NonInventoryStock st is a catalogue item, q > 0
     // MODIFIES: This
     // EFFECTS: Adds the item to cart ONLY IF the inventory has enough, also adds to existing item if there
     //          is an existing item
     @Override
-    public void addToCart(String name, int q) throws NotEnoughInventory {
+    public void addToCart(String name, int q) throws NotEnoughInventory, NotPositiveInteger, ItemNotFound {
+        if (q <= 0) {
+            throw new NotPositiveInteger(q);
+        }
+        if (!catalogue.containsKey(name.toLowerCase())) {
+            throw new ItemNotFound();
+        }
         NIStock stock = catalogue.get(name.toLowerCase());
         InventoryStock inventoryStock = inventoryMap.get(name.toLowerCase());
         InventoryStock cartStock = new InventoryStock(name, q, stock.getPrice(), stock.getUnitCost());
 
         if (this.cart.containsKey(name.toLowerCase())) {
-            int existingCartQuantity = this.cart.get(name.toLowerCase()).getQuantity();
-            cartStock.modifyInventory(existingCartQuantity);
-
-            if (inventoryStock.isSellable(cartStock.getQuantity())) {
-                this.cart.put(stock.getName().toLowerCase(), cartStock);
-
-            } else {
-                NotEnoughInventory error = new NotEnoughInventory(cartStock,inventoryStock);
-                throw error;
-
-            }
-
+            existingCart(name, cartStock, inventoryStock, stock);
         } else {
             if (inventoryStock.isSellable(cartStock.getQuantity())) {
                 this.cart.put(name.toLowerCase(), cartStock);
@@ -102,24 +100,43 @@ public class InventoryShop extends Shop {
                 throw error;
             }
         }
-
-
-
     }
 
-    // REQUIRES: NonInventoryStock stock is part of catalogue
+    private void existingCart(String n, InventoryStock ct, InventoryStock is, NIStock s) throws NotEnoughInventory {
+        int existingCartQuantity = this.cart.get(n.toLowerCase()).getQuantity();
+        ct.modifyInventory(existingCartQuantity);
+
+        if (is.isSellable(ct.getQuantity())) {
+            this.cart.put(s.getName().toLowerCase(), ct);
+
+        } else {
+            NotEnoughInventory error = new NotEnoughInventory(ct,is);
+            throw error;
+
+        }
+    }
+
     // MODIFIES: This
     // EFFECTS: Adds to the inventory of given stock
-    public void addInventory(String name, int quantity) {
+    public void addInventory(String name, int quantity) throws ItemNotFound {
+        if (!inventoryMap.containsKey(name.toLowerCase())) {
+            throw new ItemNotFound();
+        }
         this.inventoryMap.get(name.toLowerCase()).modifyInventory(quantity);
         super.save();
     }
 
-    // REQUIRES: name is unique, price > 0, unitCost > 0
     // MODIFIES: This
     // EFFECTS: Adds new item to the catalogue
     @Override
-    public void addToCatalogue(String name, int price, int unitCost) {
+    public void addToCatalogue(String name, int price, int unitCost) throws NotPositiveInteger, ItemAlreadyExists {
+        if (catalogue.containsKey(name.toLowerCase())) {
+            throw new ItemAlreadyExists();
+        } else if (price <= 0) {
+            throw new NotPositiveInteger(price);
+        } else if (unitCost <= 0) {
+            throw new NotPositiveInteger(unitCost);
+        }
         NIStock stock = new NIStock(name, price, unitCost);
         this.catalogue.put(name.toLowerCase(),stock);
         InventoryStock inventoryStock = new InventoryStock(name, 0, price, unitCost);
@@ -128,7 +145,16 @@ public class InventoryShop extends Shop {
     }
 
     @Override
-    public void editCatalogue(String name, int newPrice, int newUnitCost) {
+    public void editCatalogue(String name, int newPrice, int newUnitCost) throws NotPositiveInteger, ItemNotFound {
+        if (newPrice < 0) {
+            throw new NotPositiveInteger(newPrice);
+        }
+        if (newUnitCost < 0) {
+            throw new NotPositiveInteger(newUnitCost);
+        }
+        if (!catalogue.containsKey(name.toLowerCase())) {
+            throw new ItemNotFound();
+        }
         NIStock stock = catalogue.get(name.toLowerCase());
         int price = newPrice == 0 ? stock.getPrice() : newPrice;
         int unitCost = newUnitCost == 0 ? stock.getUnitCost() : newUnitCost;
@@ -145,7 +171,10 @@ public class InventoryShop extends Shop {
     // MODIFIES: This
     // EFFECTS: Removes given stock from catalogue and inventory
     @Override
-    public void removeItemFromCatalogue(String name) {
+    public void removeItemFromCatalogue(String name) throws ItemNotFound {
+        if (!catalogue.containsKey(name.toLowerCase())) {
+            throw new ItemNotFound();
+        }
         this.catalogue.remove(name.toLowerCase());
         this.inventoryMap.remove(name.toLowerCase());
         super.save();
@@ -154,7 +183,7 @@ public class InventoryShop extends Shop {
     // MODIFIES: This
     // EFFECT: Takes all the items from cart and attempts to purchase them
     @Override
-    public Receipt makePurchase() throws NotEnoughInventory {
+    public Receipt makePurchase() throws NotEnoughInventory, NotPositiveInteger {
         int total = 0;
         Map<String, InventoryStock> soldItems = new HashMap<>();
 

@@ -1,0 +1,33 @@
+{
+    "shop": {
+        "inventoryMap": {
+            "banana": {
+                "quantity": 50,
+                "price": 300,
+                "unitCost": 250,
+                "name": "Banana"
+            },
+            "apple": {
+                "quantity": 5,
+                "price": 500,
+                "unitCost": 300,
+                "name": "Apple"
+            }
+        },
+        "transactions": [],
+        "catalogue": {
+            "banana": {
+                "price": 300,
+                "unitCost": 250,
+                "name": "Banana"
+            },
+            "apple": {
+                "price": 500,
+                "unitCost": 300,
+                "name": "Apple"
+            }
+        }
+    },
+    "shopTypeString": "inventory",
+    "shopName": "invTestShop"
+}

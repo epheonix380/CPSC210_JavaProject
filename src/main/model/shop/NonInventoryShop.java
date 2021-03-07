@@ -1,5 +1,6 @@
 package model.shop;
 
+import exceptions.NotPositiveInteger;
 import model.stock.InventoryStock;
 import model.Receipt;
 import model.stock.NIStock;
@@ -11,20 +12,21 @@ import java.util.Map;
 //Represents NonInventoryShop, which does not track the inventory of the shop
 public class NonInventoryShop extends Shop {
 
-    public NonInventoryShop() {
-        super();
+    public NonInventoryShop(String shopName) {
+        super(shopName);
         super.shopType = "nonInventory";
+        save();
     }
 
-    public NonInventoryShop(JSONObject json) {
-        super(json);
+    public NonInventoryShop(String shopName, JSONObject json) {
+        super(shopName, json);
         super.shopType = "nonInventory";
     }
 
     // MODIFIES: This
     // EFFECT: Takes all the items from cart and attempts to purchase them
     @Override
-    public Receipt makePurchase() {
+    public Receipt makePurchase() throws NotPositiveInteger {
         int total = 0;
         for (Map.Entry<String,InventoryStock> entry : this.cart.entrySet()) {
             InventoryStock stock = entry.getValue();

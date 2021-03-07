@@ -1,0 +1,89 @@
+{
+    "shop": {
+        "inventoryMap": {
+            "bacon": {
+                "quantity": 0,
+                "price": 400,
+                "unitCost": 200,
+                "name": "Bacon"
+            },
+            "eggs": {
+                "quantity": 108,
+                "price": 350,
+                "unitCost": 210,
+                "name": "Eggs"
+            },
+            "bread": {
+                "quantity": 199,
+                "price": 300,
+                "unitCost": 200,
+                "name": "Bread"
+            }
+        },
+        "transactions": [
+            {
+                "dateTime": 1614945372043,
+                "total": 6900,
+                "items": {
+                    "eggs": {
+                        "quantity": 12,
+                        "price": 350,
+                        "unitCost": 210,
+                        "name": "Eggs"
+                    },
+                    "bacon": {
+                        "quantity": 6,
+                        "price": 400,
+                        "unitCost": 200,
+                        "name": "Bacon"
+                    },
+                    "bread": {
+                        "quantity": 1,
+                        "price": 300,
+                        "unitCost": 200,
+                        "name": "Bread"
+                    }
+                }
+            },
+            {
+                "dateTime": 1614945487516,
+                "total": 39600,
+                "items": {"bacon": {
+                    "quantity": 99,
+                    "price": 400,
+                    "unitCost": 200,
+                    "name": "Bacon"
+                }}
+            },
+            {
+                "dateTime": 1614945516359,
+                "total": 38000,
+                "items": {"bacon": {
+                    "quantity": 95,
+                    "price": 400,
+                    "unitCost": 200,
+                    "name": "Bacon"
+                }}
+            }
+        ],
+        "catalogue": {
+            "bacon": {
+                "price": 400,
+                "unitCost": 200,
+                "name": "Bacon"
+            },
+            "eggs": {
+                "price": 350,
+                "unitCost": 210,
+                "name": "Eggs"
+            },
+            "bread": {
+                "price": 300,
+                "unitCost": 200,
+                "name": "Bread"
+            }
+        }
+    },
+    "shopTypeString": "inventory",
+    "shopName": "MainShop"
+}

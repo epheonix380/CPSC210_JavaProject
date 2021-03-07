@@ -1,0 +1,36 @@
+{
+    "shop": {
+        "transactions": [{
+            "dateTime": 1615117988436,
+            "total": 10500,
+            "items": {
+                "banana": {
+                    "quantity": 10,
+                    "price": 300,
+                    "unitCost": 250,
+                    "name": "Banana"
+                },
+                "apple": {
+                    "quantity": 15,
+                    "price": 500,
+                    "unitCost": 300,
+                    "name": "Apple"
+                }
+            }
+        }],
+        "catalogue": {
+            "banana": {
+                "price": 300,
+                "unitCost": 250,
+                "name": "Banana"
+            },
+            "apple": {
+                "price": 500,
+                "unitCost": 300,
+                "name": "Apple"
+            }
+        }
+    },
+    "shopTypeString": "nonInventory",
+    "shopName": "nonInvTestShop"
+}

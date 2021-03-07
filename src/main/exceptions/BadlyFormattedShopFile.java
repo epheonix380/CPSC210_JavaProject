@@ -7,4 +7,5 @@ public class BadlyFormattedShopFile extends Exception {
     public BadlyFormattedShopFile(String location) {
         this.location = location;
     }
+
 }
