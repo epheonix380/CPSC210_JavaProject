@@ -28,6 +28,7 @@ public abstract class Shop implements JsonConvertable {
     // EFFECTS: catalogue is a map of all the available items in the store;
     //          transactions is a list of all the transactions that have occurred;
     //          cart is a not yet committed transaction that is taking place
+    //          shopName is the name of the shop, the shop will be saved to a json file using this name
     public Shop(String shopName) {
         this.catalogue = new TreeMap<>();
         this.transactions = new ArrayList<>();
@@ -38,7 +39,7 @@ public abstract class Shop implements JsonConvertable {
 
     // MODIFIES: This
     // EFFECTS: Takes a JSONObject and unpacks it into Shop
-    //
+    //          shopName is the name of the shop, the shop will be saved to a json file using this name
     public Shop(String shopName,JSONObject json) {
         this.catalogue = catalogueFromJson(json.getJSONObject("catalogue"));
         this.transactions = transactionsFromJson(json.getJSONArray("transactions"));
@@ -56,6 +57,7 @@ public abstract class Shop implements JsonConvertable {
     }
 
     // EFFECTS: Saves the current state of shop class
+    //          If there is an IOException during this process, will print Autosave failed
     public void save() {
         try {
             shopJson.saveShop(this);
@@ -96,7 +98,7 @@ public abstract class Shop implements JsonConvertable {
         return catalogue;
     }
 
-    // EFFECTS: Converts this to JSONObject, saves catalogueand transactions but not cart
+    // EFFECTS: Converts this to JSONObject, saves catalogue and transactions but not cart
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
 
@@ -106,6 +108,7 @@ public abstract class Shop implements JsonConvertable {
         return json;
     }
 
+    // EFFECTS: Converts transactions to a JSONArray
     protected JSONArray transactionsToJson() {
         JSONArray json = new JSONArray();
 
@@ -116,6 +119,7 @@ public abstract class Shop implements JsonConvertable {
         return json;
     }
 
+    // EFFECTS: Converts catalogue to JSONObject
     protected JSONObject catalogueToJson() {
         JSONObject json = new JSONObject();
 
@@ -128,7 +132,14 @@ public abstract class Shop implements JsonConvertable {
     }
 
     // MODIFIES: This
-    // EFFECTS: Adds new item to the catalogue
+    // EFFECTS: IF catalogue contains name:
+    //              Throw ItemAlreadyExists exception
+    //          else IF price <= 0:
+    //              Throw NotPositiveInteger exception
+    //          else IF unitCost <= 0:
+    //              Throw NotPositiveInteger
+    //          else:
+    //              Adds new item to the catalogue
     public void addToCatalogue(String name, int price, int unitCost) throws NotPositiveInteger, ItemAlreadyExists {
         if (catalogue.containsKey(name.toLowerCase())) {
             throw new ItemAlreadyExists();
@@ -147,8 +158,15 @@ public abstract class Shop implements JsonConvertable {
     }
 
     // MODIFIES: This
-    // EFFECTS : Modifies the current NIstock in the catalogue, if newPrice or newUnitCost is 0,
-    //           the original price or unitcost is used
+    // EFFECTS : IF newPrice < 0:
+    //              Throw NotPositiveInteger exception
+    //           else IF newUnitCost < 0:
+    //              Throw NotPositiveInteger exception
+    //           else IF catalogue does not contain name:
+    //              Throw ItemNotFound exception
+    //           else:
+    //              Modifies the current NIstock in the catalogue, if newPrice or newUnitCost is 0,
+    //              the original price or unitcost is used
     public void editCatalogue(String name, int newPrice, int newUnitCost) throws NotPositiveInteger, ItemNotFound {
         if (newPrice < 0) {
             throw new NotPositiveInteger(newPrice);
@@ -169,7 +187,10 @@ public abstract class Shop implements JsonConvertable {
     }
 
     // MODIFIES: This
-    // EFFECTS: Removes given stock from catalogue and inventory
+    // EFFECTS: IF catalogue contains name:
+    //              Removes given stock from catalogue and inventory
+    //          else:
+    //              Throw ItemNotFound exception
     public void removeItemFromCatalogue(String stockName) throws ItemNotFound {
         if (!catalogue.containsKey(stockName.toLowerCase())) {
             throw new ItemNotFound();
@@ -185,7 +206,13 @@ public abstract class Shop implements JsonConvertable {
 
 
     // MODIFIES: This
-    // EFFECTS: Adds the item to cart if there is an existing same type of item it adds the two together
+    // EFFECTS: IF q is a positive integer:
+    //              IF catalogue contains name:
+    //                  adds q items to cart if item name already exists, adds q to current amount
+    //              else:
+    //                  throws ItemNotFound exception
+    //          else:
+    //              throws NotPositiveInteger exception
     public void addToCart(String name, int q) throws NotEnoughInventory, NotPositiveInteger, ItemNotFound {
         if (q <= 0) {
             throw new NotPositiveInteger(q);
@@ -218,7 +245,10 @@ public abstract class Shop implements JsonConvertable {
     }
 
     // MODIFIES: This
-    // EFFECTS: Removes given key and its associated value from cart
+    // EFFECTS: IF cart contains name:
+    //              Removes given key and its associated value from cart
+    //          else:
+    //              Throw ItemNotFound exception
     public void removeFromCart(String name) throws ItemNotFound {
         if (!cart.containsKey(name.toLowerCase())) {
             throw new ItemNotFound();
@@ -227,7 +257,10 @@ public abstract class Shop implements JsonConvertable {
     }
 
     // MODIFIES: This
-    // EFFECTS: Modifies the amount of a specified item in the cart
+    // EFFECTS: IF cart contains name:
+    //              Modifies the amount of a specified item in the cart
+    //          else:
+    //              Throw ItemNotFound exception
     public void modifyCart(String name, int modifier) throws ItemNotFound {
         if (!cart.containsKey(name.toLowerCase())) {
             throw new ItemNotFound();
@@ -247,6 +280,6 @@ public abstract class Shop implements JsonConvertable {
     }
 
     // MODIFIES: This
-    // EFFECT: Takes all the items from cart and attempts to purchase them
+    // EFFECT: Takes all the items from cart and attempts to purchase them, specified in implementation
     public abstract Receipt makePurchase() throws NotEnoughInventory, NotPositiveInteger;
 }

@@ -8,7 +8,6 @@ public class NotEnoughInventory extends Exception {
     private InventoryStock request;
     private InventoryStock currentInventory;
 
-    // REQUIRES: requestInventory quantity is large than currentInventory quantity
     // MODIFIES: This
     // EFFECTS:  currentInventory is the current inventory that is available in the shop
     //           requestInventory is the inventory that has been requested by the customer

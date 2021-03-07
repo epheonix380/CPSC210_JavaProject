@@ -1,0 +1,21 @@
+{
+    "shop": {
+        "transactions": [{
+            "dateTime": 1615140099908,
+            "total": 10000,
+            "items": {"bread": {
+                "quantity": 50,
+                "price": 200,
+                "unitCost": 100,
+                "name": "Bread"
+            }}
+        }],
+        "catalogue": {"bread": {
+            "price": 200,
+            "unitCost": 100,
+            "name": "Bread"
+        }}
+    },
+    "shopTypeString": "nonInventory",
+    "shopName": "PersistenceTestNI"
+}

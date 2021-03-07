@@ -8,17 +8,21 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+// Represents reading Shop from json files
 public class ShopJson {
 
     private String source;
     static final String path = "./data/shops/";
     private static final int TAB = 4;
 
-    // EFFECTS: constructs reader to read from source file
+    // MODIFIES: This
+    // EFFECTS: source is the name of the Shop file to be read and written
     public ShopJson(String source) {
         this.source = path + source + ".json";
     }
 
+    // EFFECTS: gets and returns Shop, if file is badly formatted throws BadlyFormattedShopFile
+    //          if an error occurs during reading throws IOException
     public Shop getShop() throws BadlyFormattedShopFile, IOException {
         Reader reader = new Reader(this.source);
         String jsonString = reader.getJson();
@@ -27,6 +31,8 @@ public class ShopJson {
         return shop;
     }
 
+    // EFFECTS: Converts shop to jsonString and saves it using writer
+    //          if an error occurs during writing process, throws IOException
     public void saveShop(Shop shop) throws IOException {
         Writer writer = new Writer(this.source);
         Index index = new Index();
@@ -39,6 +45,7 @@ public class ShopJson {
         writer.write(json.toString(TAB));
     }
 
+    // EFFECTS: Attempts to convert string jsonData to JSONObject, if fails throws BadlyFormattedShopFile
     private Shop read(String jsonData) throws BadlyFormattedShopFile {
         JSONObject jsonObject;
         try {
@@ -49,6 +56,8 @@ public class ShopJson {
         return createShop(jsonObject);
     }
 
+    // EFFECTS: Converts JSONObject jsonObject to Shop
+    //          if fails throws BadlyFormattedShopFile
     private Shop createShop(JSONObject jsonObject) throws BadlyFormattedShopFile {
         String shopTypeString = jsonObject.getString("shopTypeString");
         Shop shop;

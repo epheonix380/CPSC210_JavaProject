@@ -88,6 +88,9 @@ public class PointOfServiceApp {
         }
     }
 
+    // MODIFIES: This
+    // EFFECTS: Edits the shop catalogue using user input, has basic input validation
+    //              Catches ItemNotFound, NotPositiveInteger and prints error message for both
     private void editCatalogue() {
         String name = validateString("Name of Catalogue Item you wish to edit");
         int price = validateInt("New Price of item, if you wish to keep the original price, please put 0");
@@ -118,7 +121,6 @@ public class PointOfServiceApp {
         }
     }
 
-    // REQUIRES: isInventory is true
     // EFFECTS: Gets and prints the inventory
     private void getInventory() {
         Map<String, InventoryStock> inventory = ((InventoryShop)shop).getInventoryMap();
@@ -143,7 +145,8 @@ public class PointOfServiceApp {
     }
 
     // MODIFIES: This
-    // EFFECTS: Adds given item to Catalogue
+    // EFFECTS: Adds given item to Catalogue, has basic input validation
+    //              Catches NotPositiveInteger, ItemAlreadyExists, and prints respective error message
     private void addToCatalogue() {
         String name;
         int price;
@@ -162,7 +165,8 @@ public class PointOfServiceApp {
     }
 
     // MODIFIES: This
-    // EFFECTS: Removes given item from Catalogue
+    // EFFECTS: Removes given item from Catalogue, has basic input validation
+    //          Catch ItemNotFound, prints respective error message
     private void removeItemFromCatalogue() {
         String name;
         name = validateString("Name of Item to remove");
@@ -176,7 +180,7 @@ public class PointOfServiceApp {
     }
 
     // MODIFIES: This
-    // EFFECTS: Opens the purchase submenu
+    // EFFECTS: Opens the purchase submenu, and subcommand handler
     private void purchase() {
         active = true;
         String command;
@@ -216,7 +220,7 @@ public class PointOfServiceApp {
         System.out.println("\td -> Exit and destroy cart");
     }
 
-    // EFFECTS: Executes the functions related to the commands
+    // EFFECTS: Processes the commands of the purchase submenu
     private void processPurchaseCommand(String command) {
         if (command.equals("p")) {
             makePurchase();
@@ -239,7 +243,8 @@ public class PointOfServiceApp {
     }
 
     // MODIFIES: This
-    // EFFECTS: Removes the specified item from the cart
+    // EFFECTS: Removes the specified item from the cart, has basic input validation
+    //          Catches ItemNotFound, prints respective error message
     private void removeFromCart() {
         String name;
         name = validateString("Name of Item to remove from cart");
@@ -252,7 +257,8 @@ public class PointOfServiceApp {
     }
 
     // MODIFIES: This
-    // EFFECTS: Adds the specified item at the specified quantity to cart
+    // EFFECTS: Adds the specified item at the specified quantity to cart, has basic input validation
+    //          Catches ItemNotFound, NotEnoughInventory, NotPositiveInteger, prints respective error message
     private void addToCart() {
         String name;
         int quantity;
@@ -272,6 +278,7 @@ public class PointOfServiceApp {
 
     // MODIFIES: This
     // EFFECTS: Purchases all the items in the cart
+    //          Catches NotEnoughInventory, NotPositiveInteger, prints respective error message
     private void makePurchase() {
         try {
             Receipt receipt = shop.makePurchase();
@@ -296,9 +303,9 @@ public class PointOfServiceApp {
 
     }
 
-    // REQUIRES: isInventory is true
     // MODIFIES: This
-    // EFFECTS: Change the amount of inventory of the specified item
+    // EFFECTS: Change the amount of inventory of the specified item, has basic input validation
+    //          Catches ItemNotFound, prints respective error message
     private void modifyInventory() {
         String name;
         int quantity;

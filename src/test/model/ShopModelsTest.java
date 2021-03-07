@@ -63,30 +63,35 @@ class ShopModelsTest {
     public void allShopAddItemToCatalogueException() {
         allShopAddItemToCatalogue();
 
-        Exception itemAlreadyExists1 = assertThrows(ItemAlreadyExists.class, () -> {
+        ItemAlreadyExists itemAlreadyExists1 = assertThrows(ItemAlreadyExists.class, () -> {
             shop1.addToCatalogue("Banana", 200,100);
         });
-        Exception itemAlreadyExists2 = assertThrows(ItemAlreadyExists.class, () -> {
+        ItemAlreadyExists itemAlreadyExists2 = assertThrows(ItemAlreadyExists.class, () -> {
             shop2.addToCatalogue("Banana", 200,100);
         });
-        Exception negativeInteger1a = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger negativeInteger1a = assertThrows(NotPositiveInteger.class, () -> {
             shop1.addToCatalogue("Unique Name", 0, 100);
         });
-        Exception negativeInteger1b = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger negativeInteger1b = assertThrows(NotPositiveInteger.class, () -> {
             shop1.addToCatalogue("Unique Name", 100, -200);
         });
-        Exception negativeInteger2a = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger negativeInteger2a = assertThrows(NotPositiveInteger.class, () -> {
             shop2.addToCatalogue("Unique Name", -150, 100);
         });
-        Exception negativeInteger2b = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger negativeInteger2b = assertThrows(NotPositiveInteger.class, () -> {
             shop2.addToCatalogue("Unique Name", 100, -250);
         });
         String strA = "The inputted integer ";
         String strB = " is either zero or smaller. The int needs to be a positive integer";
+        String pt1 = "The item you attempted to create already exists,";
+        String pt2 = " please use edit to change already existing items";
         String str1 = strA + "0" + strB;
         String str2 = strA + "-200" + strB;
         String str3 = strA + "-150" + strB;
         String str4 = strA + "-250" + strB;
+        String str5 = pt1 + pt2;
+        assertEquals(str5,itemAlreadyExists1.getMessage());
+        assertEquals(str5,itemAlreadyExists2.getMessage());
         assertEquals(str1,negativeInteger1a.getMessage());
         assertEquals(str2,negativeInteger1b.getMessage());
         assertEquals(str3,negativeInteger2a.getMessage());
@@ -136,22 +141,22 @@ class ShopModelsTest {
     public void allShopEditCatalogueException(){
         allShopEditCatalogue();
 
-        Exception itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
+        ItemNotFound itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
             shop1.editCatalogue("Dragon Fruit", 200,100);
         });
-        Exception itemNotFound2 = assertThrows(ItemNotFound.class, () -> {
+        ItemNotFound itemNotFound2 = assertThrows(ItemNotFound.class, () -> {
             shop2.editCatalogue("Dragon Fruit", 200,100);
         });
-        Exception negativeInteger1a = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger negativeInteger1a = assertThrows(NotPositiveInteger.class, () -> {
             shop1.editCatalogue("Banana", -1, 100);
         });
-        Exception negativeInteger1b = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger negativeInteger1b = assertThrows(NotPositiveInteger.class, () -> {
             shop1.editCatalogue("Banana", 100, -200);
         });
-        Exception negativeInteger2a = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger negativeInteger2a = assertThrows(NotPositiveInteger.class, () -> {
             shop2.editCatalogue("Banana", -150, 100);
         });
-        Exception negativeInteger2b = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger negativeInteger2b = assertThrows(NotPositiveInteger.class, () -> {
             shop2.editCatalogue("Banana", 100, -250);
         });
         String strA = "The inputted integer ";
@@ -259,16 +264,16 @@ class ShopModelsTest {
     public void inventoryShopCartAddTestExceptions(){
         inventoryShopInventoryIn();
 
-        Exception itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
+        ItemNotFound itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
             shop1.addToCart("Dragon Fruit", 5);
         });
-        Exception notEnoughInventory1 = assertThrows(NotEnoughInventory.class, () -> {
+        NotEnoughInventory notEnoughInventory1 = assertThrows(NotEnoughInventory.class, () -> {
             shop1.addToCart("Banana", 10000);
         });
-        Exception notPositiveInteger1 = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger notPositiveInteger1 = assertThrows(NotPositiveInteger.class, () -> {
             shop1.addToCart("Banana", 0);
         });
-        Exception notPositiveInteger2 = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger notPositiveInteger2 = assertThrows(NotPositiveInteger.class, () -> {
             shop1.addToCart("Banana", -1);
         });
         String strA = "The inputted integer ";
@@ -345,13 +350,13 @@ class ShopModelsTest {
     public void nonInventoryShopCartAddTestExceptions(){
         allShopAddItemToCatalogue();
 
-        Exception itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
+        ItemNotFound itemNotFound1 = assertThrows(ItemNotFound.class, () -> {
             shop2.addToCart("Dragon Fruit", 5);
         });
-        Exception notPositiveInteger1 = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger notPositiveInteger1 = assertThrows(NotPositiveInteger.class, () -> {
             shop2.addToCart("Banana", 0);
         });
-        Exception notPositiveInteger2 = assertThrows(NotPositiveInteger.class, () -> {
+        NotPositiveInteger notPositiveInteger2 = assertThrows(NotPositiveInteger.class, () -> {
             shop2.addToCart("Banana", -1);
         });
         String strA = "The inputted integer ";

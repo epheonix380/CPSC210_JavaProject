@@ -18,18 +18,24 @@ public class InventoryShop extends Shop {
 
     private Map<String, InventoryStock> inventoryMap = new HashMap<>();
 
+    // MODIFIES: This
+    // EFFECTS:  shopName is the name of the shop, the shop will be saved to a json file using this name
     public InventoryShop(String shopName) {
         super(shopName);
         super.shopType = "inventory";
         save();
     }
 
+    // MODIFIES: This
+    // EFFECTS:  shopName is the name of the shop, the shop will be saved to a json file using this name
+    //           json is the JSONObject from which the shop will be constructed
     public InventoryShop(String shopName, JSONObject json) {
         super(shopName,json);
         this.inventoryMap = inventoryMapFromJson(json.getJSONObject("inventoryMap"));
         super.shopType = "inventory";
     }
 
+    // EFFECTS:  Converts this to json, leaves out cart from json conversion
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
@@ -41,6 +47,7 @@ public class InventoryShop extends Shop {
         return json;
     }
 
+    // EFFECTS: Converts inventoryMap to json
     private JSONObject inventoryMapToJson() {
         JSONObject json = new JSONObject();
 
@@ -52,6 +59,8 @@ public class InventoryShop extends Shop {
         return json;
     }
 
+    // MODIFIES: This
+    // EFFECTS: Converts json to inventoryMap then sets This.inventoryMap as that inventoryMap
     private Map<String, InventoryStock> inventoryMapFromJson(JSONObject json) {
         Map<String, InventoryStock> inventoryMap = new HashMap<>();
         Iterator<String> jsonKeys = json.keys();
@@ -76,8 +85,16 @@ public class InventoryShop extends Shop {
     }
 
     // MODIFIES: This
-    // EFFECTS: Adds the item to cart ONLY IF the inventory has enough, also adds to existing item if there
-    //          is an existing item
+    // EFFECTS: IF q is a positive integer:
+    //              IF catalogue contains name:
+    //                  IF given item inventory has >= q items:
+    //                      adds q items to cart if item name already exists, adds q to current amount
+    //                  else:
+    //                      throws NotEnoughInventory exception
+    //              else:
+    //                  throws ItemNotFound exception
+    //          else:
+    //              throws NotPositiveInteger exception
     @Override
     public void addToCart(String name, int q) throws NotEnoughInventory, NotPositiveInteger, ItemNotFound {
         if (q <= 0) {
@@ -91,7 +108,7 @@ public class InventoryShop extends Shop {
         InventoryStock cartStock = new InventoryStock(name, q, stock.getPrice(), stock.getUnitCost());
 
         if (this.cart.containsKey(name.toLowerCase())) {
-            existingCart(name, cartStock, inventoryStock, stock);
+            addToCartExt(name, cartStock, inventoryStock, stock);
         } else {
             if (inventoryStock.isSellable(cartStock.getQuantity())) {
                 this.cart.put(name.toLowerCase(), cartStock);
@@ -102,7 +119,12 @@ public class InventoryShop extends Shop {
         }
     }
 
-    private void existingCart(String n, InventoryStock ct, InventoryStock is, NIStock s) throws NotEnoughInventory {
+    // MODIFIES: This
+    // EFFECTS: IF is isSellable with ct quantity:
+    //              put ct in cart
+    //          else:
+    //              Throw NotEnoughInventory exception
+    private void addToCartExt(String n, InventoryStock ct, InventoryStock is, NIStock s) throws NotEnoughInventory {
         int existingCartQuantity = this.cart.get(n.toLowerCase()).getQuantity();
         ct.modifyInventory(existingCartQuantity);
 
@@ -117,7 +139,10 @@ public class InventoryShop extends Shop {
     }
 
     // MODIFIES: This
-    // EFFECTS: Adds to the inventory of given stock
+    // EFFECTS: IF inventoryMap contains name:
+    //              Adds to the inventory of given stock
+    //          else:
+    //              Throw ItemNotFound exception
     public void addInventory(String name, int quantity) throws ItemNotFound {
         if (!inventoryMap.containsKey(name.toLowerCase())) {
             throw new ItemNotFound();
@@ -127,7 +152,14 @@ public class InventoryShop extends Shop {
     }
 
     // MODIFIES: This
-    // EFFECTS: Adds new item to the catalogue
+    // EFFECTS: IF catalogue contains key:
+    //              Throw ItemAlreadyExists exception
+    //          else IF price <= 0:
+    //              Throw NotPositiveInteger exception
+    //          else IF unitCost <= 0:
+    //              Throw NotPositiveInteger exception
+    //          else:
+    //              add item to catalogue
     @Override
     public void addToCatalogue(String name, int price, int unitCost) throws NotPositiveInteger, ItemAlreadyExists {
         if (catalogue.containsKey(name.toLowerCase())) {
@@ -144,6 +176,15 @@ public class InventoryShop extends Shop {
         super.save();
     }
 
+    // MODIFIES: This
+    // EFFECTS: IF newPrice < 0:
+    //              Throw NotPositiveInteger Exception
+    //          else IF newUnitCost < 0:
+    //              Throw NotPostiveInteger Exception
+    //          else IF catalogue does not contain name:
+    //              Throw ItemNotFound Exception
+    //          else:
+    //              edit catalogue and set name with prices: newPrice and with unitCost: newUnitCost
     @Override
     public void editCatalogue(String name, int newPrice, int newUnitCost) throws NotPositiveInteger, ItemNotFound {
         if (newPrice < 0) {
@@ -169,7 +210,10 @@ public class InventoryShop extends Shop {
     }
 
     // MODIFIES: This
-    // EFFECTS: Removes given stock from catalogue and inventory
+    // EFFECTS: IF catalogue contains name:
+    //              Removes given stock from catalogue and inventory
+    //          else:
+    //              Throw ItemNotFound exception
     @Override
     public void removeItemFromCatalogue(String name) throws ItemNotFound {
         if (!catalogue.containsKey(name.toLowerCase())) {
@@ -181,7 +225,12 @@ public class InventoryShop extends Shop {
     }
 
     // MODIFIES: This
-    // EFFECT: Takes all the items from cart and attempts to purchase them
+    // EFFECT:  IF cart total <= 0:
+    //              Throw NotPositiveInteger exception
+    //          else IF inventoryMap has enough items for all the respective items in cart:
+    //              Takes all the items from cart and purchases them
+    //          else:
+    //              Throw NotEnoughInventory Exception
     @Override
     public Receipt makePurchase() throws NotEnoughInventory, NotPositiveInteger {
         int total = 0;

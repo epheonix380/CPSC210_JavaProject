@@ -5,17 +5,19 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+// Represents writing string to json file
 public class Writer {
 
     private String destination;
     private PrintWriter writer;
 
-    // EFFECTS: constructs writer to write to destination file
+    // MODIFIES: This
+    // EFFECTS: destination is where writer should write to
     public Writer(String destination) {
         this.destination = destination;
     }
 
-
+    // EFFECTS: Writes jsonString to file
     public void write(String jsonString) throws IOException {
         open();
         saveToFile(jsonString);
@@ -23,8 +25,7 @@ public class Writer {
     }
 
     // MODIFIES: this
-    // EFFECTS: opens writer; throws FileNotFoundException if destination file cannot
-    // be opened for writing
+    // EFFECTS: opens writer; throws IOException if error occurs during writing
     private void open() throws IOException {
         writer = new PrintWriter(new File(destination));
     }

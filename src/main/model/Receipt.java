@@ -16,11 +16,13 @@ public class Receipt implements JsonConvertable {
     final Date dateTime;
 
     /*
-     * REQUIRES: total > 0
      * MODIFIES: this
-     * EFFECTS: total is the sum of all the values in the items map;
-     * 			the items map is a map of all the items with the String being the item names
-     *          dateTime is the date and time when the purchase occurred, this is for record keeping
+     * EFFECTS: IF total < 0:
+     *              Throws NotPositiveInteger exception
+     *          else:
+     *              total is the sum of all the values in the items map;
+     * 			    the items map is a map of all the items with the String being the item names
+     *              dateTime is the date and time when the purchase occurred, this is for record keeping
      */
     public Receipt(int total, Map<String,InventoryStock> items) throws NotPositiveInteger {
         if (total <= 0) {
@@ -31,12 +33,14 @@ public class Receipt implements JsonConvertable {
         dateTime = new Date();
     }
 
+    // EFFECTS: json is the JSONObject from which the receipt will be constructed
     public Receipt(JSONObject json) {
         this.total = json.getInt("total");
         this.items = itemsFromJson(json.getJSONObject("items"));
         this.dateTime = new Date(json.getLong("dateTime"));
     }
 
+    // EFFECTS: Converts this to JSONObject
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
 
@@ -47,6 +51,8 @@ public class Receipt implements JsonConvertable {
         return json;
     }
 
+    // MODIFIES: This
+    // EFFECTS: Converts JSONObject json to items
     private Map<String, InventoryStock> itemsFromJson(JSONObject json) {
         Map<String, InventoryStock> items = new TreeMap<>();
         Iterator<String> jsonKeys = json.keys();
@@ -61,6 +67,7 @@ public class Receipt implements JsonConvertable {
         return items;
     }
 
+    // EFFECTS: Converts items to JSONObjects
     private JSONObject itemsToJson() {
         JSONObject json = new JSONObject();
 

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.Scanner;
 
+// Represents the Creation, loading, and deleting menu for Persistence
 public class StartApp {
 
     private Shop shop;
@@ -18,14 +19,14 @@ public class StartApp {
     private Scanner input;
     private Index index = new Index();
 
+    // EFFECTS: Starts the application
     public StartApp() {
         input = new Scanner(System.in);
         runApp();
     }
 
     // MODIFIES: this
-    // EFFECTS: Processes the user input
-
+    // EFFECTS: Decides whether or not to advance to POS App
     private void runApp() {
         Boolean run = true;
         while (run) {
@@ -51,6 +52,7 @@ public class StartApp {
         return evaluateCommand(command);
     }
 
+    // EFFECTS: Processes commands from user input
     private int evaluateCommand(String command) {
         int state = 1;
         if (command.equals("ni")) {
@@ -70,6 +72,8 @@ public class StartApp {
         return state;
     }
 
+    // MODIFIES: This
+    // EFFECTS: Creates a new InventoryShop with name given by user
     private int createIN() {
         try {
             String shopName = validateString("Name of Shop");
@@ -87,6 +91,8 @@ public class StartApp {
         }
     }
 
+    // MODIFIES: This
+    // EFFECTS: Creates a new NonInventoryShop with name given by user
     private int createNI() {
         try {
             String shopName = validateString("Name of Shop");
@@ -104,6 +110,8 @@ public class StartApp {
         }
     }
 
+    // MODIFIES: This
+    // EFFECTS: Deletes user specified file from shop files
     private void delete() {
         try {
             System.out.println("Please choose from the indexed shop files:");
@@ -123,6 +131,8 @@ public class StartApp {
         }
     }
 
+    // MODIFIES: This
+    // EFFECTS: Loads user specified shop from files
     private int load() {
         int state = 2;
         try {

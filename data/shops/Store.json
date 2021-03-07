@@ -1,0 +1,69 @@
+{
+    "shop": {
+        "transactions": [
+            {
+                "dateTime": 1614945599023,
+                "total": 800,
+                "items": {"papaya": {
+                    "quantity": 1,
+                    "price": 800,
+                    "unitCost": 400,
+                    "name": "Papaya"
+                }}
+            },
+            {
+                "dateTime": 1614945613899,
+                "total": 3000,
+                "items": {
+                    "papaya": {
+                        "quantity": 1,
+                        "price": 800,
+                        "unitCost": 400,
+                        "name": "Papaya"
+                    },
+                    "banana": {
+                        "quantity": 3,
+                        "price": 200,
+                        "unitCost": 100,
+                        "name": "Banana"
+                    },
+                    "apple": {
+                        "quantity": 4,
+                        "price": 400,
+                        "unitCost": 200,
+                        "name": "Apple"
+                    }
+                }
+            },
+            {
+                "dateTime": 1614945638957,
+                "total": -80000,
+                "items": {"papaya": {
+                    "quantity": -100,
+                    "price": 800,
+                    "unitCost": 400,
+                    "name": "Papaya"
+                }}
+            }
+        ],
+        "catalogue": {
+            "banana": {
+                "price": 200,
+                "unitCost": 100,
+                "name": "Banana"
+            },
+            "papaya": {
+                "price": 800,
+                "unitCost": 400,
+                "name": "Papaya"
+            },
+            "apple": {
+                "price": 400,
+                "unitCost": 200,
+                "name": "Apple"
+            }
+        }
+    },
+    "shopTypeString": "nonInventory",
+    "shopName": "Store"
+}
