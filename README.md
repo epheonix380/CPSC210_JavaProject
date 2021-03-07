@@ -35,6 +35,8 @@ and handwritten receipts. So I thought of making a free POS system that was opti
 - As a user I wish to be limited by my inventory system so that I don't sell more items than I actually have
 - As a user I wish to be able to make a sale with all the items in the cart
 - As a user I wish to be able to keep track of my sales
+- As a user I wish to be able to save my shop so that I can record my sales and inventory for the future
+- As a user I wish to be able to load from saved shops so that I may continue to sell items
 
 **HOW TO USE**
 
