@@ -4,9 +4,11 @@ package model.stock;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Map;
 
 // Represents a NonInventoryStock, which does not track the amount of said Stock the store has
 public class NIStock extends Stock {
+
 
     public NIStock(String name, int price, int unitCost) {
         super(name, price, unitCost);
@@ -21,4 +23,5 @@ public class NIStock extends Stock {
     public boolean sell(int quantity) {
         return true;
     }
+
 }

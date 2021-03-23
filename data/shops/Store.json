@@ -15,17 +15,17 @@
                 "dateTime": 1614945613899,
                 "total": 3000,
                 "items": {
-                    "papaya": {
-                        "quantity": 1,
-                        "price": 800,
-                        "unitCost": 400,
-                        "name": "Papaya"
-                    },
                     "banana": {
                         "quantity": 3,
                         "price": 200,
                         "unitCost": 100,
                         "name": "Banana"
+                    },
+                    "papaya": {
+                        "quantity": 1,
+                        "price": 800,
+                        "unitCost": 400,
+                        "name": "Papaya"
                     },
                     "apple": {
                         "quantity": 4,
@@ -44,12 +44,22 @@
                     "unitCost": 400,
                     "name": "Papaya"
                 }}
+            },
+            {
+                "dateTime": 1615286212869,
+                "total": 1600,
+                "items": {"papaya": {
+                    "quantity": 2,
+                    "price": 800,
+                    "unitCost": 400,
+                    "name": "Papaya"
+                }}
             }
         ],
         "catalogue": {
             "banana": {
-                "price": 200,
-                "unitCost": 100,
+                "price": 499,
+                "unitCost": 200,
                 "name": "Banana"
             },
             "papaya": {
@@ -57,10 +67,55 @@
                 "unitCost": 400,
                 "name": "Papaya"
             },
+            "test4": {
+                "price": 1,
+                "unitCost": 1,
+                "name": "Test4"
+            },
             "apple": {
-                "price": 400,
+                "price": 500,
                 "unitCost": 200,
                 "name": "Apple"
+            },
+            "test5": {
+                "price": 1,
+                "unitCost": 1,
+                "name": "Test5"
+            },
+            "test2": {
+                "price": 1,
+                "unitCost": 1,
+                "name": "Test2"
+            },
+            "test3": {
+                "price": 1,
+                "unitCost": 1,
+                "name": "Test3"
+            },
+            "test8": {
+                "price": 2,
+                "unitCost": 2,
+                "name": "Test8"
+            },
+            "test6": {
+                "price": 1,
+                "unitCost": 1,
+                "name": "Test6"
+            },
+            "test7": {
+                "price": 1,
+                "unitCost": 1,
+                "name": "Test7"
+            },
+            "watermelon": {
+                "price": 1500,
+                "unitCost": 1000,
+                "name": "Watermelon"
+            },
+            "test1": {
+                "price": 1,
+                "unitCost": 1,
+                "name": "Test1"
             }
         }
     },

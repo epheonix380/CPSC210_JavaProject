@@ -6,6 +6,7 @@ import model.shop.NonInventoryShop;
 import model.shop.Shop;
 import org.json.JSONObject;
 
+import java.awt.event.ActionListener;
 import java.io.IOException;
 
 // Represents reading Shop from json files
@@ -27,7 +28,6 @@ public class ShopJson {
         Reader reader = new Reader(this.source);
         String jsonString = reader.getJson();
         Shop shop = read(jsonString);
-        System.out.println(shop);
         return shop;
     }
 

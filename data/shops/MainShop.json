@@ -7,17 +7,23 @@
                 "unitCost": 200,
                 "name": "Bacon"
             },
-            "eggs": {
-                "quantity": 108,
-                "price": 350,
-                "unitCost": 210,
-                "name": "Eggs"
+            "apple": {
+                "quantity": 0,
+                "price": 500,
+                "unitCost": 250,
+                "name": "Apple"
             },
             "bread": {
                 "quantity": 199,
                 "price": 300,
                 "unitCost": 200,
                 "name": "Bread"
+            },
+            "pizza": {
+                "quantity": 0,
+                "price": 200,
+                "unitCost": 100,
+                "name": "Pizza"
             }
         },
         "transactions": [
@@ -25,17 +31,17 @@
                 "dateTime": 1614945372043,
                 "total": 6900,
                 "items": {
-                    "eggs": {
-                        "quantity": 12,
-                        "price": 350,
-                        "unitCost": 210,
-                        "name": "Eggs"
-                    },
                     "bacon": {
                         "quantity": 6,
                         "price": 400,
                         "unitCost": 200,
                         "name": "Bacon"
+                    },
+                    "eggs": {
+                        "quantity": 12,
+                        "price": 350,
+                        "unitCost": 210,
+                        "name": "Eggs"
                     },
                     "bread": {
                         "quantity": 1,
@@ -67,20 +73,25 @@
             }
         ],
         "catalogue": {
+            "apple": {
+                "price": 500,
+                "unitCost": 250,
+                "name": "Apple"
+            },
             "bacon": {
                 "price": 400,
                 "unitCost": 200,
                 "name": "Bacon"
             },
-            "eggs": {
-                "price": 350,
-                "unitCost": 210,
-                "name": "Eggs"
-            },
             "bread": {
                 "price": 300,
                 "unitCost": 200,
                 "name": "Bread"
+            },
+            "pizza": {
+                "price": 200,
+                "unitCost": 100,
+                "name": "Pizza"
             }
         }
     },

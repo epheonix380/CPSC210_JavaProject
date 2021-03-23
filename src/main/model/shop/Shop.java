@@ -8,6 +8,7 @@ import model.stock.InventoryStock;
 import model.Receipt;
 import model.stock.NIStock;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.*;
 import org.json.*;
@@ -261,7 +262,7 @@ public abstract class Shop implements JsonConvertable {
     //              Modifies the amount of a specified item in the cart
     //          else:
     //              Throw ItemNotFound exception
-    public void modifyCart(String name, int modifier) throws ItemNotFound {
+    public void modifyCart(String name, int modifier) throws NotEnoughInventory, ItemNotFound {
         if (!cart.containsKey(name.toLowerCase())) {
             throw new ItemNotFound();
         }

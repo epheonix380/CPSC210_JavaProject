@@ -16,6 +16,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
 public class PersistenceModelsTest {
 
     private ShopJson invShopJson;
@@ -200,3 +201,4 @@ public class PersistenceModelsTest {
 
 
 }
+*/

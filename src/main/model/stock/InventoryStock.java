@@ -4,6 +4,7 @@ package model.stock;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.util.Map;
 
 // Represents an InventoryStock, which track the inventory said stock in the store
 public class InventoryStock extends Stock {
@@ -19,7 +20,6 @@ public class InventoryStock extends Stock {
     public InventoryStock(String name, int quantity, int price, int unitCost) {
         super(name, price, unitCost);
         this.quantity = quantity;
-
     }
 
     public InventoryStock(JSONObject json) {
@@ -68,7 +68,6 @@ public class InventoryStock extends Stock {
         boolean isSuccess;
         if (quantity <= this.quantity) {
             Date date = new Date();
-            InventoryStock stock = new InventoryStock(this.name, quantity, this.price, this.unitCost);
             this.quantity -= quantity;
             isSuccess = true;
 
@@ -78,4 +77,5 @@ public class InventoryStock extends Stock {
         return isSuccess;
 
     }
+
 }

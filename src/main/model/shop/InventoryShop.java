@@ -119,6 +119,27 @@ public class InventoryShop extends Shop {
         }
     }
 
+    @Override
+    public void modifyCart(String name, int modifier) throws NotEnoughInventory, ItemNotFound {
+        if (!catalogue.containsKey(name.toLowerCase())) {
+            throw new ItemNotFound();
+        }
+        InventoryStock inventoryStock = inventoryMap.get(name.toLowerCase());
+        InventoryStock cartStock = this.cart.get(name.toLowerCase());
+        int quantity = cartStock.getQuantity() + modifier;
+        InventoryStock modifiedCartStock = new InventoryStock(
+                cartStock.getName(), quantity, cartStock.getPrice(), cartStock.getUnitCost());
+
+        if (inventoryStock.isSellable(modifiedCartStock.getQuantity())) {
+            cartStock.modifyInventory(modifier);
+
+        } else {
+            NotEnoughInventory error = new NotEnoughInventory(modifiedCartStock,inventoryStock);
+            throw error;
+
+        }
+    }
+
     // MODIFIES: This
     // EFFECTS: IF is isSellable with ct quantity:
     //              put ct in cart
