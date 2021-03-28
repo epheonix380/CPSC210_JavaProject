@@ -2,29 +2,31 @@ package ui.cards;
 
 import exceptions.ItemNotFound;
 import exceptions.NotEnoughInventory;
-import exceptions.NotPositiveInteger;
-import model.shop.InventoryShop;
 import model.shop.Shop;
 import model.stock.InventoryStock;
 import ui.Frame;
 import ui.Refreshable;
 import ui.elements.Button;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class CartCard extends GeneralCard implements ActionListener {
+// Represents a card of information displaying an item in the cart
+public class CartCard extends FrameCard implements ActionListener {
 
     private InventoryStock stock;
     private Shop shop;
     private TextField textField;
     private Refreshable refreshable;
 
+    // MODIFIES: This
+    // EFFECTS: frame is the frame that the card is contained in
+    //          refreshable is an object that can be refreshed if state changes occur
+    //          stock is the InventoryStock that the Card is currently displaying
+    //          shop is the Shop that the cart is contained in
     public CartCard(Frame frame, Refreshable refreshable, InventoryStock stock, Shop shop) {
         super(frame);
         this.refreshable = refreshable;
@@ -33,12 +35,29 @@ public class CartCard extends GeneralCard implements ActionListener {
         this.shop = shop;
     }
 
+    // EFFECTS: Adds label names to a List then returns the List
     private List<String> getLabelNames(InventoryStock stock) {
         List<String> labelNames = new ArrayList<>();
 
         labelNames.add(stock.getName());
 
         String stringPrice = String.valueOf(stock.getPrice());
+        String price = formatMoney(stringPrice);
+        labelNames.add(price);
+
+        String stringAmount = String.valueOf(stock.getQuantity());
+        String amount = "x" + stringAmount;
+        labelNames.add(amount);
+
+        String stringValue = String.valueOf(stock.getValue());
+        String value = formatMoney(stringValue);
+        labelNames.add(value);
+
+        return labelNames;
+    }
+
+    // EFFECTS: formats money from cents to dollars and adds appropriate decimals and dollar signs
+    private String formatMoney(String stringPrice) {
         String price;
         if (stringPrice.length() >= 2) {
             int decimalPoint1 = stringPrice.length() - 2;
@@ -50,29 +69,12 @@ public class CartCard extends GeneralCard implements ActionListener {
             }
             price = "$0." + price;
         }
-        labelNames.add(price);
 
-        String stringAmount = String.valueOf(stock.getQuantity());
-        String amount = "x" + stringAmount;
-        labelNames.add(amount);
+        return price;
 
-        String stringValue = String.valueOf(stock.getValue());
-        String value;
-        if (stringValue.length() >= 2) {
-            int decimalPoint2 = stringValue.length() - 2;
-            value = "$" + stringValue.substring(0, decimalPoint2) + "." + stringValue.substring(decimalPoint2);
-        } else {
-            value = stringValue;
-            for (int i = 0; i < 2 - stringValue.length(); i++) {
-                value = "0" + value;
-            }
-            value = "$0." + value;
-        }
-        labelNames.add(value);
-
-        return labelNames;
     }
 
+    // EFFECTS: Gets all the buttons and textFields required for this card and adds them to a list
     private List<Component> getComponentList(InventoryStock stock) {
         Button plusButton = new Button("+", this, "add");
         Button minusButton = new Button("-", this, "subtract");
@@ -91,6 +93,7 @@ public class CartCard extends GeneralCard implements ActionListener {
         return componentList;
     }
 
+    // EFFECTS: Receives an ActionEvent and executes a function depending on what the command is
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("add")) {
@@ -104,6 +107,8 @@ public class CartCard extends GeneralCard implements ActionListener {
         }
     }
 
+    // MODIFIES: This
+    // EFFECTS: Deletes this.stock from shop, refreshes so the state change is displayed
     private void delete() {
         try {
             shop.removeFromCart(this.stock.getName());
@@ -113,6 +118,8 @@ public class CartCard extends GeneralCard implements ActionListener {
         refreshable.refresh();
     }
 
+    // MODIFIES: This
+    // EFFECTS: Modifies the cart stock according to what the text in the textField says
     private void addText() {
         String text = textField.getText();
         if (!text.isEmpty()) {
@@ -136,6 +143,8 @@ public class CartCard extends GeneralCard implements ActionListener {
         this.refreshable.refresh();
     }
 
+    // MODIFIES: This
+    // EFFECTS: adds one to this.stock
     private void addOne() {
         try {
             shop.modifyCart(stock.getName(), 1);
@@ -147,6 +156,9 @@ public class CartCard extends GeneralCard implements ActionListener {
         }
     }
 
+    // MODIFIES: This
+    // EFFECTS: If this.stock.getQuantity > 0: Subtracts one from this.stock
+    //          else deletes this.stock from shop
     private void subtractOne() {
         if (this.stock.getQuantity() > 0) {
             try {

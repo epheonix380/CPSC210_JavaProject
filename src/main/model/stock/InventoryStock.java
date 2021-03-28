@@ -11,7 +11,6 @@ public class InventoryStock extends Stock {
 
     private int quantity;
 
-    // REQUIRES: quantity >= 0, price > 0, unitCost > 0
     // MODIFIES: This
     // EFFECTS: name is the Name of the item
     //          quantity is how much of the item is in inventory
@@ -22,12 +21,15 @@ public class InventoryStock extends Stock {
         this.quantity = quantity;
     }
 
+    // MODIFIES: This
+    // EFFECTS: converts given JSONObject into an InventoryStock
     public InventoryStock(JSONObject json) {
         super(json);
         int quantity = json.getInt("quantity");
         this.quantity = quantity;
     }
 
+    // EFFECTS: Converts this into JSONObject
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

@@ -9,14 +9,20 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+// Represents a data entry window for a NonInventoryStock
 public class NonInventoryStockEntry extends JOptionPane {
 
     private JFrame frame;
 
+    // MODIFIES: This
+    // EFFECTS: frame represents the JFrame in which this is contained
     public NonInventoryStockEntry() {
         this.frame = new JFrame();
     }
 
+    // EFFECTS: Creates a data entry window with values from stock as default values
+    //          returns the entered values if user selects "Ok"
+    //          else returns an empty HashMap
     public Map<String, String> getString(NIStock stock) {
         Map<String, String> resultMap = new HashMap<>();
 
@@ -52,6 +58,9 @@ public class NonInventoryStockEntry extends JOptionPane {
         return resultMap;
     }
 
+    // EFFECTS: Creates a data entry window with empty values
+    //          returns the entered values if user selects "Ok"
+    //          else returns an empty HashMap
     public Map<String, String> getString() {
         Map<String, String> resultMap = new HashMap<>();
 

@@ -2,28 +2,34 @@
     "shop": {
         "inventoryMap": {
             "bacon": {
-                "quantity": 0,
+                "quantity": 9,
                 "price": 400,
                 "unitCost": 200,
                 "name": "Bacon"
             },
             "apple": {
-                "quantity": 0,
-                "price": 500,
+                "quantity": 69,
+                "price": 5000,
                 "unitCost": 250,
                 "name": "Apple"
             },
             "bread": {
-                "quantity": 199,
+                "quantity": 28,
                 "price": 300,
                 "unitCost": 200,
                 "name": "Bread"
             },
             "pizza": {
-                "quantity": 0,
+                "quantity": 9,
                 "price": 200,
                 "unitCost": 100,
                 "name": "Pizza"
+            },
+            "pasta": {
+                "quantity": 9,
+                "price": 500,
+                "unitCost": 300,
+                "name": "Pasta"
             }
         },
         "transactions": [
@@ -70,11 +76,145 @@
                     "unitCost": 200,
                     "name": "Bacon"
                 }}
+            },
+            {
+                "dateTime": 1616597681074,
+                "total": 2500,
+                "items": {"apple": {
+                    "quantity": 5,
+                    "price": 500,
+                    "unitCost": 250,
+                    "name": "Apple"
+                }}
+            },
+            {
+                "dateTime": 1616597707670,
+                "total": 2500,
+                "items": {"apple": {
+                    "quantity": 5,
+                    "price": 500,
+                    "unitCost": 250,
+                    "name": "Apple"
+                }}
+            },
+            {
+                "dateTime": 1616598178512,
+                "total": 5066000,
+                "items": {
+                    "apple": {
+                        "quantity": 1000,
+                        "price": 5000,
+                        "unitCost": 250,
+                        "name": "Apple"
+                    },
+                    "bacon": {
+                        "quantity": 10,
+                        "price": 400,
+                        "unitCost": 200,
+                        "name": "Bacon"
+                    },
+                    "bread": {
+                        "quantity": 200,
+                        "price": 300,
+                        "unitCost": 200,
+                        "name": "Bread"
+                    },
+                    "pizza": {
+                        "quantity": 10,
+                        "price": 200,
+                        "unitCost": 100,
+                        "name": "Pizza"
+                    }
+                }
+            },
+            {
+                "dateTime": 1616652913589,
+                "total": 4000,
+                "items": {"bacon": {
+                    "quantity": 10,
+                    "price": 400,
+                    "unitCost": 200,
+                    "name": "Bacon"
+                }}
+            },
+            {
+                "dateTime": 1616652925450,
+                "total": 50000,
+                "items": {"apple": {
+                    "quantity": 10,
+                    "price": 5000,
+                    "unitCost": 250,
+                    "name": "Apple"
+                }}
+            },
+            {
+                "dateTime": 1616652932470,
+                "total": 50000,
+                "items": {"apple": {
+                    "quantity": 10,
+                    "price": 5000,
+                    "unitCost": 250,
+                    "name": "Apple"
+                }}
+            },
+            {
+                "dateTime": 1616856113107,
+                "total": 77000,
+                "items": {
+                    "apple": {
+                        "quantity": 10,
+                        "price": 5000,
+                        "unitCost": 250,
+                        "name": "Apple"
+                    },
+                    "bread": {
+                        "quantity": 90,
+                        "price": 300,
+                        "unitCost": 200,
+                        "name": "Bread"
+                    }
+                }
+            },
+            {
+                "dateTime": 1616860178900,
+                "total": 6400,
+                "items": {
+                    "apple": {
+                        "quantity": 1,
+                        "price": 5000,
+                        "unitCost": 250,
+                        "name": "Apple"
+                    },
+                    "bacon": {
+                        "quantity": 1,
+                        "price": 400,
+                        "unitCost": 200,
+                        "name": "Bacon"
+                    },
+                    "bread": {
+                        "quantity": 1,
+                        "price": 300,
+                        "unitCost": 200,
+                        "name": "Bread"
+                    },
+                    "pizza": {
+                        "quantity": 1,
+                        "price": 200,
+                        "unitCost": 100,
+                        "name": "Pizza"
+                    },
+                    "pasta": {
+                        "quantity": 1,
+                        "price": 500,
+                        "unitCost": 300,
+                        "name": "Pasta"
+                    }
+                }
             }
         ],
         "catalogue": {
             "apple": {
-                "price": 500,
+                "price": 5000,
                 "unitCost": 250,
                 "name": "Apple"
             },
@@ -92,6 +232,11 @@
                 "price": 200,
                 "unitCost": 100,
                 "name": "Pizza"
+            },
+            "pasta": {
+                "price": 500,
+                "unitCost": 300,
+                "name": "Pasta"
             }
         }
     },

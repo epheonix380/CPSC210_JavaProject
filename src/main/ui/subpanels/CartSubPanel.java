@@ -1,7 +1,9 @@
 package ui.subpanels;
 
 import exceptions.ItemAlreadyExists;
+import exceptions.NotEnoughInventory;
 import exceptions.NotPositiveInteger;
+import model.Receipt;
 import model.shop.Shop;
 import model.stock.InventoryStock;
 import model.stock.NIStock;
@@ -10,6 +12,7 @@ import ui.Refreshable;
 import ui.cards.CartCard;
 import ui.cards.CatalogueCard;
 import ui.dialogue.NonInventoryStockEntry;
+import ui.dialogue.ShowErrorMessage;
 import ui.elements.Button;
 import ui.elements.Label;
 
@@ -19,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
+// Represents the SubPanel that displays the shopping Cart inside of the main Panel
 public class CartSubPanel extends JPanel implements ActionListener, Refreshable {
 
     private Frame frame;
@@ -27,6 +31,10 @@ public class CartSubPanel extends JPanel implements ActionListener, Refreshable 
     private JPanel topBar;
     private Refreshable refreshable;
 
+    // MODIFIES: This
+    // EFFECTS: frame is the Frame in which this is contained
+    //          shop is the Shop that the cart is contained in
+    //          refreshable is the parent that is refreshable
     public CartSubPanel(Frame frame, Shop shop, Refreshable refreshable) {
         this.frame = frame;
         this.shop = shop;
@@ -38,6 +46,8 @@ public class CartSubPanel extends JPanel implements ActionListener, Refreshable 
         this.add(cards);
     }
 
+    // MODIFIES: This
+    // EFFECTS: Creates a panel that will become the topbar
     private void generateTopBar() {
         JPanel panel = new JPanel();
         LayoutManager layoutManager = new BoxLayout(panel, BoxLayout.X_AXIS);
@@ -45,14 +55,16 @@ public class CartSubPanel extends JPanel implements ActionListener, Refreshable 
         System.out.println(shop.getCartTotal());
         Label total = new Label("Cart Total: " + parseInt(shop.getCartTotal()));
         ui.elements.Button destroyButton = new Button("x", this, "destroy");
-
+        Button purchaseButton = new Button("Purchase Cart", this, "purchase");
         panel.add(total);
         panel.add(destroyButton);
+        panel.add(purchaseButton);
 
         this.topBar = panel;
         this.add(panel);
     }
 
+    // EFFECTS: formats money from cents to dollars and adds appropriate decimals and dollar signs
     private String parseInt(int integer) {
         String stringValue = String.valueOf(integer);
         String value;
@@ -69,6 +81,7 @@ public class CartSubPanel extends JPanel implements ActionListener, Refreshable 
         return value;
     }
 
+    // EFFECTS: Generates the list of cards that display cart
     private JScrollPane generateCards() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -82,15 +95,36 @@ public class CartSubPanel extends JPanel implements ActionListener, Refreshable 
         return new JScrollPane(panel);
     }
 
+    // EFFECTS: Receives an ActionEvent and executes a function depending on what the command is
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("destroy")) {
             shop.destroyCart();
             this.refresh();
+        } else if (e.getActionCommand().equals("purchase")) {
+            makePurchase();
         }
     }
 
+    // EFFECTS: Makes a purchase
+    private void makePurchase() {
+        if (shop.getCart().isEmpty()) {
+            new ShowErrorMessage().sayError("Cart Was Empty");
+        } else {
+            try {
+                Receipt receipt = shop.makePurchase();
+                System.out.println(receipt);
+                refreshable.refresh();
+            } catch (NotEnoughInventory e) {
+                new ShowErrorMessage().sayError(e.errorMessage());
+            } catch (NotPositiveInteger e) {
+                shop.destroyCart();
+                new ShowErrorMessage().sayError("An Unrecoverable error has occurred");
+            }
+        }
+    }
 
+    // EFFECTS: Refreshes this
     @Override
     public void refresh() {
         this.remove(this.cards);

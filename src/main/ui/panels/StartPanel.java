@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+// Represents the first panel that the user will see and interact with
 public class StartPanel extends JPanel implements ActionListener {
 
     private static Map<String, String> buttonMap = new LinkedHashMap<String, String>() {{
@@ -32,6 +33,8 @@ public class StartPanel extends JPanel implements ActionListener {
     private ShowErrorMessage showErrorMessage;
     private Index index = new Index();
 
+    // MODIFIES: This
+    // EFFECTS: frame represents the Frame in which this is contained
     public StartPanel(Frame frame) {
         this.frame = frame;
         this.stringEntry = new StringEntry();
@@ -43,7 +46,6 @@ public class StartPanel extends JPanel implements ActionListener {
 
         for (String key : buttonMap.keySet()) {
             String buttonText = key;
-            System.out.println(buttonText);
             String buttonCommand = buttonMap.get(key);
             Button button = new Button(buttonText, this, buttonCommand);
             this.add(button);
@@ -60,6 +62,7 @@ public class StartPanel extends JPanel implements ActionListener {
 
     }
 
+    // EFFECTS: Receives an ActionEvent and executes a function depending on what the command is
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
@@ -72,24 +75,29 @@ public class StartPanel extends JPanel implements ActionListener {
         } else if (command.equals("DEL")) {
             delete(command);
         } else if (command.equals("QUIT")) {
-            System.out.println("Quitting");
+            frame.dispose();
         }
     }
 
+    // MODIFIES: This
+    // EFFECTS: opens the load menu
     private void load(String command) {
         SelectShopPanel selectShopPanel = new SelectShopPanel(frame, 0);
-        frame.remove(this);
+        this.setVisible(false);
         frame.add(selectShopPanel);
         frame.update();
     }
 
+    // MODIFIES: This
+    // EFFECTS: opens the delete menu
     private void delete(String command) {
         SelectShopPanel selectShopPanel = new SelectShopPanel(frame, 1);
-        frame.remove(this);
+        this.setVisible(false);
         frame.add(selectShopPanel);
         frame.update();
     }
 
+    // EFFECTS: opens the createNonInventoryShop dialogue and creates a NonInventoryShop with the given name
     private void createNonInventoryShop(String command) {
         String name = stringEntry.getString("Please enter the shop name");
         try {
@@ -98,10 +106,10 @@ public class StartPanel extends JPanel implements ActionListener {
             } else if (index.contains(name)) {
                 frame.sayErrorMessage("Cancelled: A file name " + name + " already exists");
             } else {
-                NonInventoryShop shop = new NonInventoryShop(command);
-                MainAppPanel mainApp = new MainAppPanel(frame,shop,true);
+                NonInventoryShop shop = new NonInventoryShop(name);
+                MainAppPanel mainApp = new MainAppPanel(frame,shop,false);
+                this.setVisible(false);
                 frame.add(mainApp);
-                frame.remove(this);
                 frame.pack();
             }
         } catch (IOException e) {
@@ -111,18 +119,19 @@ public class StartPanel extends JPanel implements ActionListener {
         }
     }
 
+    // EFFECTS: opens the createInventoryShop dialogue and creates an InventoryShop with the given name
     private void createInventoryShop(String command) {
         String name = stringEntry.getString("Please enter the shop name");
         try {
             if (name.isEmpty()) {
                 frame.sayErrorMessage("Cancelled: Name was not entered");
             } else if (index.contains(name)) {
-                frame.sayErrorMessage("Cancelled: A file name " + name + " already exists");
+                frame.sayErrorMessage("Cancelled: The file name " + name + " already exists");
             } else {
-                InventoryShop shop = new InventoryShop(command);
+                InventoryShop shop = new InventoryShop(name);
                 MainAppPanel mainApp = new MainAppPanel(frame,shop,true);
+                this.setVisible(false);
                 frame.add(mainApp);
-                frame.remove(this);
                 frame.pack();
             }
         } catch (IOException e) {

@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
+// Represents the SubPanel that displays the catalogue of items inside of the main Panel
 public class CatalogueSubPanel extends JPanel implements ActionListener, Refreshable {
 
     private Frame frame;
@@ -24,6 +25,10 @@ public class CatalogueSubPanel extends JPanel implements ActionListener, Refresh
     private JScrollPane cards;
     private Refreshable refreshable;
 
+    // MODIFIES: This
+    // EFFECTS: frame is the Frame in which this is contained
+    //          shop is the Shop whose catalogue this is displaying
+    //          refreshable is a refreshable parent
     public CatalogueSubPanel(Frame frame, Shop shop, Refreshable refreshable) {
         this.refreshable = refreshable;
         this.frame = frame;
@@ -35,6 +40,8 @@ public class CatalogueSubPanel extends JPanel implements ActionListener, Refresh
         this.add(cards);
     }
 
+    // MODIFIES: This
+    // EFFECTS: Creates a panel that will become the topbar
     private void generateTopBar() {
         JPanel panel = new JPanel();
         LayoutManager layoutManager = new BoxLayout(panel, BoxLayout.X_AXIS);
@@ -48,6 +55,7 @@ public class CatalogueSubPanel extends JPanel implements ActionListener, Refresh
         this.add(panel);
     }
 
+    // EFFECTS: Generates the list of cards that display cart
     private JScrollPane generateCards() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -61,6 +69,7 @@ public class CatalogueSubPanel extends JPanel implements ActionListener, Refresh
         return new JScrollPane(panel);
     }
 
+    // EFFECTS: Receives an ActionEvent and executes a function depending on what the command is
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("add")) {
@@ -68,24 +77,31 @@ public class CatalogueSubPanel extends JPanel implements ActionListener, Refresh
         }
     }
 
+    // EFFECTS: Creates a new NIStock to add to the catalogue
     private void createNIStock() {
         NonInventoryStockEntry entry = new NonInventoryStockEntry();
         Map<String, String> itemMap = entry.getString();
         if (!itemMap.isEmpty()) {
-            String name = itemMap.get("name");
-            int price = Integer.parseInt(itemMap.get("price"));
-            int cost = Integer.parseInt(itemMap.get("cost"));
             try {
-                shop.addToCatalogue(name, price, cost);
-                refresh();
-            } catch (NotPositiveInteger e) {
-                frame.sayErrorMessage(e.getMessage());
-            } catch (ItemAlreadyExists e) {
-                frame.sayErrorMessage(e.getMessage());
+                String name = itemMap.get("name");
+                int price = Integer.parseInt(itemMap.get("price"));
+                int cost = Integer.parseInt(itemMap.get("cost"));
+                try {
+                    shop.addToCatalogue(name, price, cost);
+                    refresh();
+                } catch (NotPositiveInteger e) {
+                    frame.sayErrorMessage(e.getMessage());
+                } catch (ItemAlreadyExists e) {
+                    frame.sayErrorMessage(e.getMessage());
+                }
+            } catch (NullPointerException e) {
+                //
             }
         }
+        refreshable.refresh();
     }
 
+    // EFFECTS: Refreshes this
     @Override
     public void refresh() {
         this.remove(this.cards);

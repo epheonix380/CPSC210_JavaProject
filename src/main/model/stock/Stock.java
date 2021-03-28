@@ -26,6 +26,8 @@ public abstract class Stock implements JsonConvertable {
 
     }
 
+    // MODIFIES: This
+    // EFFECTS: Converts JSONObject to stock
     public Stock(JSONObject json) {
         String name = json.getString("name");
         int price = json.getInt("price");
@@ -35,6 +37,7 @@ public abstract class Stock implements JsonConvertable {
         this.unitCost = unitCost;
     }
 
+    // EFFECTS: Converts this to JSONObject
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
 

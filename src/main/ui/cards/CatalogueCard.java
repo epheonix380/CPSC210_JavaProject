@@ -1,12 +1,9 @@
 package ui.cards;
 
-import exceptions.ItemAlreadyExists;
 import exceptions.ItemNotFound;
 import exceptions.NotEnoughInventory;
 import exceptions.NotPositiveInteger;
-import model.shop.NonInventoryShop;
 import model.shop.Shop;
-import model.stock.InventoryStock;
 import model.stock.NIStock;
 import ui.Frame;
 import ui.Refreshable;
@@ -14,7 +11,6 @@ import ui.dialogue.NonInventoryStockEntry;
 import ui.dialogue.StringEntry;
 import ui.elements.Button;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,13 +18,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class CatalogueCard extends GeneralCard implements ActionListener {
+// Represents a card displaying information about a catalogue item in a shop
+public class CatalogueCard extends FrameCard implements ActionListener {
 
     private NIStock stock;
     private Shop shop;
     private TextField textField;
     private Refreshable refreshable;
 
+    // MODIFIES: This
+    // EFFECTS: frame is the frame that the card is contained in
+    //          refreshable is an object that can be refreshed if state changes occur
+    //          stock is the NIStock that the Card is currently displaying
+    //          shop is the Shop that the catalogue is contained in
     public CatalogueCard(Frame frame, Refreshable refreshable, NIStock stock, Shop shop) {
         super(frame);
         this.refreshable = refreshable;
@@ -37,6 +39,7 @@ public class CatalogueCard extends GeneralCard implements ActionListener {
         this.shop = shop;
     }
 
+    // EFFECTS: Adds label names to a List then returns the List
     private java.util.List<String> getLabelNames(NIStock stock) {
         java.util.List<String> labelNames = new ArrayList<>();
 
@@ -58,6 +61,7 @@ public class CatalogueCard extends GeneralCard implements ActionListener {
         return labelNames;
     }
 
+    // EFFECTS: Gets all the buttons and textFields required for this card and adds them to a list
     private java.util.List<Component> getComponentList(NIStock stock) {
         ui.elements.Button editButton = new ui.elements.Button("Edit", this, "edit");
         ui.elements.Button deleteButton = new ui.elements.Button("Delete", this, "delete");
@@ -71,6 +75,7 @@ public class CatalogueCard extends GeneralCard implements ActionListener {
         return componentList;
     }
 
+    // EFFECTS: Receives an ActionEvent and executes a function depending on what the command is
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("edit")) {
@@ -90,6 +95,7 @@ public class CatalogueCard extends GeneralCard implements ActionListener {
         }
     }
 
+    // EFFECTS: Adds this.stock to card, asking for the quantity while doing so, then refreshes
     private void addToCart() {
         StringEntry entry = new StringEntry();
         try {
@@ -107,6 +113,7 @@ public class CatalogueCard extends GeneralCard implements ActionListener {
         }
     }
 
+    // EFFECTS: Collects the edits that will be done on this.stock then commits said edits
     private void editNIStock() {
         NonInventoryStockEntry entry = new NonInventoryStockEntry();
         Map<String, String> infoMap = entry.getString(this.stock);

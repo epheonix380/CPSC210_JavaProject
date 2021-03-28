@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+// Represents a Panel in which a shop is to be selected
 public class SelectShopPanel extends JPanel implements ActionListener {
 
     static List<String> modes = new ArrayList<String>() {{
@@ -29,48 +30,56 @@ public class SelectShopPanel extends JPanel implements ActionListener {
     private BoxLayout manager;
     private int mode;
 
+    // MODIFIES: This
+    // EFFECTS: frame is the Frame in which this is contained
+    //          mode is whether this is in delete or load mode, load is 0, delete is 1
     public SelectShopPanel(Frame frame, int mode) {
         this.index = new Index();
         this.mode = mode;
         this.frame = frame;
         this.manager = new BoxLayout(this, BoxLayout.Y_AXIS);
         this.setLayout(manager);
-        Button button1 = new Button("Back", this, "BACK");
-        this.add(button1);
         addAllShops();
         textField = new JTextField();
         this.add(textField);
         Button button2 = new Button(modes.get(mode), this, modes.get(mode));
         this.add(button2);
         frame.pack();
-        System.out.println("Test");
         frame.update();
     }
 
+    // MODIFIES: This
+    // EFFECTS: Adds all shops to a list to be displayed
     private void addAllShops() {
         try {
+            JPanel panel = new JPanel();
+            panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
             List<String> shopNames = index.getIndex();
             for (String shop : shopNames) {
                 Label label = new Label(shop);
-                this.add(label);
-                System.out.println(shop);
+                panel.add(label);
             }
+            JScrollPane scrollPane = new JScrollPane(panel);
+            this.add(scrollPane);
         } catch (IOException e) {
             errorDuringLoad("An error has occurred while trying to read the index");
         }
     }
 
+    // EFFECTS: Displays the error message and exits the panel
     private void errorDuringLoad(String message) {
         exit();
         frame.sayErrorMessage(message);
     }
 
+    // EFFECTS: Exits the panel and goes back to teh start panel
     private void exit() {
         StartPanel startPanel = new StartPanel(frame);
         frame.add(startPanel);
         frame.remove(this);
     }
 
+    // EFFECTS: Loads a specified shop with name command
     private void load(String command) {
         try {
             String name = textField.getText();
@@ -91,6 +100,7 @@ public class SelectShopPanel extends JPanel implements ActionListener {
         }
     }
 
+    // EFFECTS: Deletes a specified shop named command
     private void delete(String command) {
         try {
             String name = textField.getText();
@@ -110,16 +120,16 @@ public class SelectShopPanel extends JPanel implements ActionListener {
         }
     }
 
+    // EFFECTS: Replaces this with MainAppPanel to display selected shop
     private void showShop(Shop shop, String type) {
-        System.out.println("checkpoint 1");
         boolean isInventory = type.equals("inventory");
         MainAppPanel main = new MainAppPanel(frame, shop, isInventory);
+        this.setVisible(false);
         frame.add(main);
-        frame.remove(this);
         frame.update();
-        System.out.println("checkpoint 2");
     }
 
+    // EFFECTS: Receives an ActionEvent and executes a function depending on what the command is
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();

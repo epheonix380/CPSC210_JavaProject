@@ -119,6 +119,12 @@ public class InventoryShop extends Shop {
         }
     }
 
+    // MODIFIES: This
+    // EFFECTS: If catalogue contains item name:
+    //              If cartStock + modifier is less than or equal to existing inventory of name:
+    //                  Modifies current cart item to have cartStock + modifier quantity
+    //              else throws NotEnoughInventoryError
+    //          else throws ItemNotFoundError
     @Override
     public void modifyCart(String name, int modifier) throws NotEnoughInventory, ItemNotFound {
         if (!catalogue.containsKey(name.toLowerCase())) {
