@@ -2,13 +2,13 @@
     "shop": {
         "inventoryMap": {
             "bacon": {
-                "quantity": 9,
+                "quantity": 8,
                 "price": 400,
                 "unitCost": 200,
                 "name": "Bacon"
             },
             "apple": {
-                "quantity": 69,
+                "quantity": 67,
                 "price": 5000,
                 "unitCost": 250,
                 "name": "Apple"
@@ -210,6 +210,34 @@
                         "name": "Pasta"
                     }
                 }
+            },
+            {
+                "dateTime": 1616947425806,
+                "total": 5400,
+                "items": {
+                    "apple": {
+                        "quantity": 1,
+                        "price": 5000,
+                        "unitCost": 250,
+                        "name": "Apple"
+                    },
+                    "bacon": {
+                        "quantity": 1,
+                        "price": 400,
+                        "unitCost": 200,
+                        "name": "Bacon"
+                    }
+                }
+            },
+            {
+                "dateTime": 1616947894029,
+                "total": 5000,
+                "items": {"apple": {
+                    "quantity": 1,
+                    "price": 5000,
+                    "unitCost": 250,
+                    "name": "Apple"
+                }}
             }
         ],
         "catalogue": {

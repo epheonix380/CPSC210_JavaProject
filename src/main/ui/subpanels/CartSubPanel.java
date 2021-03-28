@@ -13,6 +13,7 @@ import ui.cards.CartCard;
 import ui.cards.CatalogueCard;
 import ui.dialogue.NonInventoryStockEntry;
 import ui.dialogue.ShowErrorMessage;
+import ui.dialogue.SuccessfulTransaction;
 import ui.elements.Button;
 import ui.elements.Label;
 
@@ -115,6 +116,7 @@ public class CartSubPanel extends JPanel implements ActionListener, Refreshable 
                 Receipt receipt = shop.makePurchase();
                 System.out.println(receipt);
                 refreshable.refresh();
+                new SuccessfulTransaction();
             } catch (NotEnoughInventory e) {
                 new ShowErrorMessage().sayError(e.errorMessage());
             } catch (NotPositiveInteger e) {
