@@ -116,7 +116,7 @@ public class CartSubPanel extends JPanel implements ActionListener, Refreshable 
                 Receipt receipt = shop.makePurchase();
                 System.out.println(receipt);
                 refreshable.refresh();
-                new SuccessfulTransaction();
+                new SuccessfulTransaction(receipt);
             } catch (NotEnoughInventory e) {
                 new ShowErrorMessage().sayError(e.errorMessage());
             } catch (NotPositiveInteger e) {
