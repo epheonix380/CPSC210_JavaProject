@@ -18,7 +18,7 @@ import java.util.Map;
 
 // Represents the first panel that the user will see and interact with
 public class StartPanel extends JPanel implements ActionListener {
-
+/*
     private static Map<String, String> buttonMap = new LinkedHashMap<String, String>() {{
             put("Inventory Shop", "INVSHOP");
             put("Non Inventory Shop", "NONINVSHOP");
@@ -26,7 +26,7 @@ public class StartPanel extends JPanel implements ActionListener {
             put("Delete Shop", "DEL");
             put("Save and Quit", "QUIT");
         }};
-
+*/
     private Frame frame;
     private GridBagLayout manager;
     private StringEntry stringEntry;
@@ -41,24 +41,33 @@ public class StartPanel extends JPanel implements ActionListener {
         this.manager = new GridBagLayout();
         this.setBorder(BorderFactory.createEmptyBorder(25, 25, 25, 25));
         this.setLayout(manager);
-
-        int count = 0;
-
-        for (String key : buttonMap.keySet()) {
-            String buttonText = key;
-            String buttonCommand = buttonMap.get(key);
-            Button button = new Button(buttonText, this, buttonCommand);
-            this.add(button);
-
-            GridBagConstraints constraints = new GridBagConstraints(
-                    0, -1, 1, 1, 0, 0, 10, 0,
-                    new Insets(5, 0, 5, 0), 10, 10
-            );
-            manager.setConstraints(button, constraints);
-            count += 1;
-        }
+        generateButtons();
         frame.update();
 
+
+    }
+
+    private void generateButtons() {
+        Button button1 = new Button("Inventory Shop", this, "INVSHOP");
+        Button button2 = new Button("Non Inventory Shop", this, "NONINVSHOP");
+        Button button3 = new Button("Load Shop", this,"LOAD");
+        Button button4 = new Button("Delete Shop", this, "DEL");
+        Button button5 = new Button("Save and Quit", this, "QUIT");
+        GridBagConstraints constraints = new GridBagConstraints(
+                0, -1, 1, 1, 0, 0, 10, 0,
+                new Insets(5, 0, 5, 0), 10, 10
+        );
+
+        this.add(button1);
+        manager.setConstraints(button1, constraints);
+        this.add(button2);
+        manager.setConstraints(button2, constraints);
+        this.add(button3);
+        manager.setConstraints(button3, constraints);
+        this.add(button4);
+        manager.setConstraints(button4, constraints);
+        this.add(button5);
+        manager.setConstraints(button5, constraints);
 
     }
 

@@ -19,11 +19,7 @@ import java.util.List;
 // Represents a Panel in which a shop is to be selected
 public class SelectShopPanel extends JPanel implements ActionListener {
 
-    static List<String> modes = new ArrayList<String>() {{
-            add("Load");
-            add("Delete");
-        }};
-
+    private List<String> modes = new ArrayList<String>();
     private Index index;
     private Frame frame;
     private JTextField textField;
@@ -34,6 +30,8 @@ public class SelectShopPanel extends JPanel implements ActionListener {
     // EFFECTS: frame is the Frame in which this is contained
     //          mode is whether this is in delete or load mode, load is 0, delete is 1
     public SelectShopPanel(Frame frame, int mode) {
+        this.modes.add("Load");
+        this.modes.add("Delete");
         this.index = new Index();
         this.mode = mode;
         this.frame = frame;
