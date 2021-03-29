@@ -15,6 +15,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 // Represents the SubPanel that displays the catalogue of items inside of the main Panel
@@ -22,8 +24,10 @@ public class CatalogueSubPanel extends JPanel implements ActionListener, Refresh
 
     private Frame frame;
     private Shop shop;
-    private JScrollPane cards;
     private Refreshable refreshable;
+    private List<CatalogueCard> componentList;
+    private JScrollPane scrollPane;
+    private TextField textField;
 
     // MODIFIES: This
     // EFFECTS: frame is the Frame in which this is contained
@@ -33,11 +37,17 @@ public class CatalogueSubPanel extends JPanel implements ActionListener, Refresh
         this.refreshable = refreshable;
         this.frame = frame;
         this.shop = shop;
+        this.textField = new TextField();
+        textField.addActionListener(this);
+        this.componentList = new ArrayList<>();
         LayoutManager layoutManager = new BoxLayout(this,BoxLayout.Y_AXIS);
         this.setLayout(layoutManager);
         generateTopBar();
-        this.cards = generateCards();
-        this.add(cards);
+        generateCards();
+        Label search = new Label("Search Store:");
+        this.add(search);
+        this.add(textField);
+        this.add(scrollPane);
     }
 
     // MODIFIES: This
@@ -56,17 +66,37 @@ public class CatalogueSubPanel extends JPanel implements ActionListener, Refresh
     }
 
     // EFFECTS: Generates the list of cards that display cart
-    private JScrollPane generateCards() {
+    private void generateCards() {
+        this.componentList = new ArrayList<>();
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         Map<String, NIStock> catalogue = shop.getCatalogue();
         for (Map.Entry<String,NIStock> entry : catalogue.entrySet()) {
             NIStock stock = entry.getValue();
             CatalogueCard card = new CatalogueCard(frame, refreshable, stock, shop);
+            this.componentList.add(card);
             panel.add(card);
         }
 
-        return new JScrollPane(panel);
+        this.scrollPane = new JScrollPane(panel);
+    }
+
+    // EFFECTS: Searches all NIStock in catalogue for term and returns all matches
+    private void search(String term) {
+        this.remove(scrollPane);
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        int i = 0;
+        for (CatalogueCard card : componentList) {
+            if (card.stock.getName().contains(term)) {
+                panel.add(card);
+                i++;
+            }
+
+        }
+        this.scrollPane = new JScrollPane(panel);
+        this.add(scrollPane);
+        frame.update();
     }
 
     // EFFECTS: Receives an ActionEvent and executes a function depending on what the command is
@@ -74,6 +104,8 @@ public class CatalogueSubPanel extends JPanel implements ActionListener, Refresh
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("add")) {
             createNIStock();
+        } else {
+            search(textField.getText());
         }
     }
 
@@ -104,9 +136,9 @@ public class CatalogueSubPanel extends JPanel implements ActionListener, Refresh
     // EFFECTS: Refreshes this
     @Override
     public void refresh() {
-        this.remove(this.cards);
-        this.cards = generateCards();
-        this.add(cards);
+        this.remove(scrollPane);
+        generateCards();
+        this.add(scrollPane);
         frame.update();
     }
 }

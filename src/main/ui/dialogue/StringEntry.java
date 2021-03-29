@@ -12,6 +12,7 @@ public class StringEntry extends JOptionPane {
     // EFFECTS: frame is the JFrame in which this is contained
     public StringEntry() {
         frame = new JFrame();
+        frame.setMaximumSize(new Dimension(600, 800));
         this.setBackground(new Color(0x39ff14));
     }
 

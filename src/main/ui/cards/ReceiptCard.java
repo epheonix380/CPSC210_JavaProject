@@ -4,6 +4,7 @@ import model.Receipt;
 import model.shop.Shop;
 import ui.Frame;
 import ui.Refreshable;
+import ui.dialogue.ReceiptDisplay;
 import ui.dialogue.ShowReceipt;
 
 import java.awt.*;
@@ -81,6 +82,6 @@ public class ReceiptCard extends FrameCard implements ActionListener {
 
     // EFFECTS: Opens the receipt in a new window (new JFrame)
     private void open() {
-        ShowReceipt showReceipt = new ShowReceipt(receipt);
+        ReceiptDisplay showReceipt = new ReceiptDisplay(receipt);
     }
 }

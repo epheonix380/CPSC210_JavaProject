@@ -21,7 +21,7 @@ import java.util.Map;
 // Represents a card displaying information about a catalogue item in a shop
 public class CatalogueCard extends FrameCard implements ActionListener {
 
-    private NIStock stock;
+    public final NIStock stock;
     private Shop shop;
     private TextField textField;
     private Refreshable refreshable;

@@ -13,6 +13,7 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Map;
@@ -31,6 +32,25 @@ public class SuccessfulTransaction extends JOptionPane {
         this.frame = new JFrame();
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        addImage(panel);
+        playAudio();
+        String time = "Time: " + receipt.getDateTime().toString();
+        String total = "Total: " + parseInt(receipt.getTotal());
+        Label timeLabel = new Label(time);
+        Label totalLabel = new Label(total);
+        panel.add(timeLabel);
+        panel.add(totalLabel);
+        panel.add(generateCards());
+        JDialog dialog = new JDialog();
+        dialog.setTitle("Transaction Successful");
+        dialog.add(panel);
+        dialog.setMinimumSize(new Dimension(600,900));
+        dialog.setVisible(true);
+
+    }
+
+    // EFFECTS: Adds an image to panel
+    private void addImage(JPanel panel) {
         try {
             BufferedImage img = ImageIO.read(new File("data/assets/money.png"));
             ImageIcon icon = new ImageIcon(img);
@@ -40,19 +60,9 @@ public class SuccessfulTransaction extends JOptionPane {
             Label label = new Label("There was a problem loading the image :(");
             panel.add(label);
         }
-        playAudio();
-        String time = "Time: " + receipt.getDateTime().toString();
-        String total = "Total: " + parseInt(receipt.getTotal());
-        Label timeLabel = new Label(time);
-        Label totalLabel = new Label(total);
-        panel.add(timeLabel);
-        panel.add(totalLabel);
-        panel.add(generateCards());
-        int result = this.showConfirmDialog(null, panel,
-                "Receipt", JOptionPane.OK_CANCEL_OPTION);
-
     }
 
+    // EFFECTS: Plays audio to show the user that a successful transaction has occured
     private void playAudio() {
         try {
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File("data/assets/sound.wav"));
@@ -64,6 +74,8 @@ public class SuccessfulTransaction extends JOptionPane {
         }
     }
 
+    // EFFECTS: Generates a JScrollPane in which contained a ReceiptItemCard for every key value pair in
+    //          the items map in receipt
     private JScrollPane generateCards() {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -77,6 +89,7 @@ public class SuccessfulTransaction extends JOptionPane {
         return new JScrollPane(panel);
     }
 
+    // EFFECTS: formats money from cents to dollars and adds appropriate decimals and dollar signs
     private String parseInt(int integer) {
         String stringValue = String.valueOf(integer);
         String value;

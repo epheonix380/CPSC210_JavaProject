@@ -2,9 +2,6 @@ package ui.dialogue;
 
 import model.Receipt;
 import model.stock.InventoryStock;
-import ui.Frame;
-import ui.cards.CartCard;
-import ui.cards.ReceiptCard;
 import ui.cards.ReceiptItemCard;
 import ui.elements.Label;
 
@@ -13,29 +10,25 @@ import java.awt.*;
 import java.util.Map;
 
 // Represents a window in which a detailed receipt can be viewed
-public class ShowReceipt extends JOptionPane {
+public class ReceiptDisplay extends JDialog {
 
-    private JFrame frame;
     private Receipt receipt;
+    private JFrame frame;
 
     // MODIFIES: This
     // EFFECTS: receipt is the Receipt that will be displayed in this window
-    public ShowReceipt(Receipt receipt) {
+    public ReceiptDisplay(Receipt receipt) {
         this.receipt = receipt;
         this.frame = new JFrame();
-        frame.setMaximumSize(new Dimension(800,600));
+        this.setMinimumSize(new Dimension(300,600));
+        this.setTitle("Receipt");
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = generateCards();
-        String time = "Time: " + receipt.getDateTime().toString();
-        String total = "Total: " + parseInt(receipt.getTotal());
-        Label timeLabel = new Label(time);
-        Label totalLabel = new Label(total);
-        panel.add(timeLabel);
-        panel.add(totalLabel);
-        panel.add(scrollPane);
-        int result = this.showConfirmDialog(this.frame, panel,
-                "Receipt", JOptionPane.CANCEL_OPTION);
+        panel.add(new Label("Time: " + receipt.getDateTime().toString()));
+        panel.add(new Label("Total: " + parseInt(receipt.getTotal())));
+        panel.add(generateCards());
+        this.add(panel);
+        this.show();
 
     }
 

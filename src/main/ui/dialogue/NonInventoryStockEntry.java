@@ -5,6 +5,7 @@ import ui.Frame;
 import ui.elements.Label;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -18,6 +19,8 @@ public class NonInventoryStockEntry extends JOptionPane {
     // EFFECTS: frame represents the JFrame in which this is contained
     public NonInventoryStockEntry() {
         this.frame = new JFrame();
+        frame.setMaximumSize(new Dimension(600, 800));
+
     }
 
     // EFFECTS: Creates a data entry window with values from stock as default values

@@ -12,6 +12,7 @@ public class ShowErrorMessage extends JOptionPane {
     // EFFECTS: frame represents the JFrame in which this is contained
     public ShowErrorMessage() {
         this.frame = new JFrame();
+        frame.setMaximumSize(new Dimension(600, 800));
     }
 
     // EFFECTS: Displays message as the error in a popup window
