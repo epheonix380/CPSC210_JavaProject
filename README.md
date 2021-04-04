@@ -46,3 +46,21 @@ creating the items in the catalogue is the first thing that should be done. Addi
 the inventory shop, that means that the program will be keeping track of the inventory of the shop and thus after
 creating the catalogue, the inventory needs to be added in order to be able to purchase items.
 
+**Phase 4: Task 2**
+
+USE MAP
+
+The implementation of the Map interface was used inside the Shop abstract class. The variable "cart" was declared to be
+of apparent type Map<String, InventoryStock> and actual type HashMap<String, InventoryStock>. In this implementation the 
+use of map was a necessity in order to fulfill the requirements of the features. The main feature was that the same
+item would be grouped together into one single item in the cart. The type InventoryStock had quantity as a private 
+but accessible field so when adding multiple units of a single item to cart this would be fine. But adding the same 
+item multiple times would create multiple instances of the InventoryStock item that was supposed to represent the same
+item, thus it was necessary to know whether the InventoryStock was already inside the cart or not. For this it was
+significantly easier to implement a map with the name of the items as the key instead of overriding the equals method
+and using a for loop or other such methods. Because the item name of the InventoryStock came from the item name of
+the NIStock inside the catalogue Map it would be the same for all of the different addition operations of the single 
+item and thus it could be used to determine whether the item already existed in cart. This was then used as a check to 
+determine whether to add the item to the cart map or whether to edit the already existing item in the cart map. This 
+did not work on HashSet even with an overrided equals method for InventoryStock thus it was determined that Map would 
+function the best for this purpose. 
