@@ -30,7 +30,6 @@ public class StartPanel extends JPanel implements ActionListener {
     private Frame frame;
     private GridBagLayout manager;
     private StringEntry stringEntry;
-    private ShowErrorMessage showErrorMessage;
     private Index index = new Index();
 
     // MODIFIES: This

@@ -5,7 +5,6 @@ import model.shop.Shop;
 import ui.Frame;
 import ui.Refreshable;
 import ui.dialogue.ReceiptDisplay;
-import ui.dialogue.ShowReceipt;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;

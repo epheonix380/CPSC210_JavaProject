@@ -38,6 +38,7 @@ public abstract class Shop implements JsonConvertable {
         this.shopJson = new ShopJson(shopName);
     }
 
+
     // MODIFIES: This
     // EFFECTS: Takes a JSONObject and unpacks it into Shop
     //          shopName is the name of the shop, the shop will be saved to a json file using this name
@@ -223,7 +224,6 @@ public abstract class Shop implements JsonConvertable {
         }
         NIStock stock = catalogue.get(name.toLowerCase());
         InventoryStock inventoryStock = new InventoryStock(name, q, stock.getPrice(), stock.getUnitCost());
-
         if (this.cart.containsKey(name.toLowerCase())) {
             this.cart.get(name.toLowerCase()).modifyInventory(q);
         } else {
